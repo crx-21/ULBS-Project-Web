@@ -6,12 +6,23 @@
     <title>Register</title>
 </head>
 <body>
-    <form action="register.php" method="post" class="auth-form">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        <input type="submit" value="Register">
+    <h1>Sign Up</h1>
+    <form action="../backend/api.php" method="post" class="auth-form">
+        <label>Username:</label>
+        <input type="text"     name="username">
+        <label>Email:</label>
+        <input type="email"    name="email">
+        <label>Password:</label>
+        <input type="password" name="password">
+        <input type="hidden"   name="role" value="tenant">  <!-- or a <select> -->
+        <input type="submit"   name="action" value="Register">
+        <!--Am pus nav links ca e mai ok sebi ca sa stii.-->
+        <div class="navigation-links">
+            <br>
+            <a href="login.html">Already have an account? Sign In</a>
+            <br><br>
+            <a href="frontPage.html">Back to Home</a>
+        </div>
     </form>
 </body>
 </html>
