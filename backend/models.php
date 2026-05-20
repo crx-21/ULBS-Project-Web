@@ -13,7 +13,9 @@ class Property {
     private $location;
     private $rent;
     private $availability;
-
+    private $images;
+    private $features;
+    private $floorPlan;
 }
 
 class Application {
