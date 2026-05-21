@@ -9,7 +9,7 @@ BA:
 Developer
 - [ ] Interfata site (Pagina principala)
 - [ ] Implementarea paginilor externe (Cont, For-Rent/To-Rent, Contact)
-- [ ] Creearea bazei de date
+- [x] Creearea bazei de date
 - [ ] Functionalitatea contului
 - [ ] Functionalitatea site-ului
 - [ ] Legatura dintre back-end si front-end
