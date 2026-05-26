@@ -16,6 +16,7 @@ h1, h2 {
     height: 100%;
     overflow: hidden;
     background-color: #5f0d38;
+    background: linear-gradient(60deg,rgba(95, 13, 56, 1) 0%, rgba(94, 16, 59, 1) 28%, rgba(77, 77, 77, 1) 60%);/* Realizat cu un generator gradient */
     display: flex;         
 }
 
