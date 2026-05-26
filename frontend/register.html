@@ -3,32 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/style.css">
     <title>Register</title>
 </head>
-<body>
-    <h1>Sign Up</h1>
-    <form action="../backend/api.php" method="post" class="auth-form">
-        <label>Username:</label>
-        <input type="text"     name="username">
-        <label>Email:</label>
-        <input type="email"    name="email">
-        <label>Password:</label>
-        <input type="password" name="password">
-        <input type="hidden"   name="role" value="tenant">  <!-- or a <select> -->
-        <input type="submit"   name="action" value="Register">
-        <!--Am pus nav links ca e mai ok sebi ca sa stii.-->
-        <div class="navigation-links">
-            <br>
-            <a href="login.html">Already have an account? Sign In</a>
-            <br><br>
-            <a href="frontPage.html">Back to Home</a>
+
+<body class="auth-screen">
+
+    <div class="auth-banner">
+        <h2>Welcome!</h2>
+        <p>Is this your first time here? Sign-Up right now and enjoy the full experience!</p>
+    </div>
+
+    <div class="auth-form">
+        <div class="items">
+            <form action="../backend/api.php" method="post">
+                <h1>Sign Up:</h1>
+
+                <input type="text" placeholder="Email" id="entry" name="email" required>
+                <input type="text" placeholder="Username" id="entry" name="username" required>
+                <input type="password" placeholder="Password" id="password" name="password" required>
+                <input type="hidden" name="role" value="tenant">
+                <div class="navigation-links">
+                    <a href="login.html">Already have an account? Sign In</a>
+                </div>
+                <input type="submit" name="action" value="Register" id="button">
+
+                
+                
+                
+                
+            </form>
         </div>
-    </form>
-    <form action="login.html" method="get" class="auth-form">
-        <input type="submit" value="Already have an account? Sign In">
-    </form>
-    <form action="frontPage.html" method="get" class="auth-form">
-        <input type="submit" value="Back to Home">
-    </form>
+    </div>
+
 </body>
 </html>
