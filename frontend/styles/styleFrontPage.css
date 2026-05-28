@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;600&display=swap');
+
+body {
+    font-family: 'DM Sans', sans-serif;
+}
+
+
+.navigation-bar{
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    gap: 100px;
+    padding: 20px;
+    background-color: #5f0d38;
+    color: white;
+}
+
+.nav-links{
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.navigation-bar .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 40px;
+    align-items: center;
+    display: flex;
+    img{
+        height: 50px;
+        margin-right: 10px;
+    }
+}
+
+#sign-in
+{
+    position: absolute;
+    right: 20px;
+ background-color: white;
+  border: solid;
+  border-radius:15px;
+  color: #5f0d38;
+  padding: 15px;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#browse
+{
+     background-color: white;
+  border: solid;
+  border-radius:15px;
+  color: #5f0d38;
+  padding: 15px;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#contact
+{
+ background-color: white;
+  border: solid;
+  border-radius:15px;
+  color: #5f0d38;
+  padding: 15px;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#to-rent
+{
+    background-color: white;
+  border: solid;
+  border-radius:15px;
+  color: #5f0d38;
+  padding: 15px;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+}
