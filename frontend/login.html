@@ -3,22 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/style.css">
     <title>Login</title>
 </head>
-<body>
-    <h1>Login</h1>
-    <form action="login.php" method="post" class="auth-form">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        <input type="submit" value="Login">
+<body class="auth-screen">
+    <div class="auth-banner">
+        <h2>Welcome!</h2>
+        <p>Is this your first time here? Sign-Up right now and enjoy the full experience!</p>
+    </div>
+    <div class="auth-form">
+    <div class="items"> 
+    <h1>Login:</h1>
+    <form action="../backend/api.php" method="post" >
+        <input type="text" placeholder="Username" name="username" id="entry" required>
+        <input type="password" id="password" placeholder="Password" name="password" required>
+        <label class="container-checkbox">Remember Me
+            <input type="checkbox">
+            <span class="checkmark"></span>
+          </label>
+          <div class="navigation-links">
+            <a href="register.html">Don't have an account? Register!</a>
+            <a href="frontPage.html">Back to Home</a>
+            <a href="accountRecovery.html">Forgot Password?</a>
+        </div>
+        <input type="submit" value="Login" id="button">
+        
     </form>
-    <form action="register.html" method="get" class="auth-form">
-        <input type="submit" value="Don't have an account? Register">
-    </form>
-    <form action="frontPage.html" method="get" class="auth-form">
-        <input type="submit" value="Back to Home">
-    </form>
+    
+</div>
 </body>
 </html>
