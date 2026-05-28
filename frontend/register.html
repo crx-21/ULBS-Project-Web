@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/styleAuth.css">
     <title>Register</title>
 </head>
 
@@ -16,7 +16,7 @@
 
     <div class="auth-form">
         <div class="items">
-            <form action="../backend/api.php" method="post">
+            <form id="Register">
                 <h1>Sign Up:</h1>
 
                 <input type="text" placeholder="Email" id="entry" name="email" required>
@@ -33,6 +33,39 @@
                 
                 
             </form>
+            <script>
+            document.getElementById('Register').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData.entries());
+                data.action = 'Register';
+
+                try {
+                    const response = await fetch('../backend/api.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+
+                    const text = await response.text();
+                    try {
+                        const result = JSON.parse(text);
+                        if (result.success) {
+                            
+                            window.location.href = 'login.html';
+                        } else {
+                            alert('Registration failed: ' + result.message);
+                        }
+                    } catch (e) {
+                        console.error('Server response was not JSON:', text);
+                        alert('Server Error: ' + text);
+                    }
+                } catch (error) {
+                    console.error('Network Error:', error);
+                    alert('An error occurred during registration. Please try again.');
+                }
+            });
+            </script>
         </div>
     </div>
 

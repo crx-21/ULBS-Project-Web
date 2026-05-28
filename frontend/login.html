@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/styleAuth.css">
     <title>Login</title>
 </head>
 <body class="auth-screen">
@@ -14,7 +14,7 @@
     <div class="auth-form">
     <div class="items"> 
     <h1>Login:</h1>
-    <form action="../backend/api.php" method="post" >
+    <form id="Login">
         <input type="text" placeholder="Username" name="username" id="entry" required>
         <input type="password" id="password" placeholder="Password" name="password" required>
         <label class="container-checkbox">Remember Me
@@ -27,9 +27,42 @@
             <a href="accountRecovery.html">Forgot Password?</a>
         </div>
         <input type="submit" value="Login" id="button">
-        
+
     </form>
-    
+
+    <script>
+    document.getElementById('Login').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData.entries());
+        data.action = 'Login';
+
+        try {
+            const response = await fetch('../backend/api.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            const text = await response.text();
+            try {
+                const result = JSON.parse(text);
+                if (result.success) {
+                    window.location.href = 'frontPage.html';
+                } else {
+                    alert('Login failed: ' + result.message);
+                }
+            } catch (e) {
+                console.error('Server response was not JSON:', text);
+                alert('Server Error: ' + text);
+            }
+        } catch (error) {
+            console.error('Network Error:', error);
+            alert('An error occurred during login. Please try again.');
+        }
+    });
+    </script>
+
 </div>
 </body>
 </html>
