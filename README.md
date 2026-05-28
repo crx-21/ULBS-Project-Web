@@ -16,10 +16,10 @@ Developer
 - [ ] Implementarea design-ului
 
 Designer:
-- [ ] Paleta de culori pentru site
-- [ ] Logo-ul
+- [x] Paleta de culori pentru site
+- [x] Logo-ul
 - [ ] Design pagina principala
-- [ ] Design Sign-In/Log In
+- [x] Design Sign-In/Log In
 - [ ] Design pagini externe (Cont, For-Rent/To-Rent, Contact)
 - [ ] Animarea paginilor
 
