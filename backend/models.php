@@ -19,7 +19,7 @@ class User {
         $stmt = $this->db->prepare(
             "INSERT INTO users (username, email, role, password_hash) VALUES (?, ?, ?, ?)"
         );
-        return $stmt->execute([$username,$hash ,$email, $role]);
+        return $stmt->execute([$username, $email, $role, $hash]);
     }
 
     public function Login($username, $password) {

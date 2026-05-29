@@ -1,7 +1,3 @@
-*/
-Actual database configuration file used for PDO connection.
-/*
-
 <?php
 $host = "127.0.0.1";
 $port = "1037";

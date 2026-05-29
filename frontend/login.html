@@ -14,7 +14,7 @@
     <div class="auth-form">
     <div class="items"> 
     <h1>Login:</h1>
-    <form action="../backend/api.php" method="post" >
+    <form id="Login">
         <input type="text" placeholder="Username" name="username" id="entry" required>
         <input type="password" id="password" placeholder="Password" name="password" required>
         <label class="container-checkbox">Remember Me
@@ -27,9 +27,11 @@
             <a href="accountRecovery.html">Forgot Password?</a>
         </div>
         <input type="submit" value="Login" id="button">
-        
+
     </form>
-    
+
+   
 </div>
+<script src="auth.js"></script>
 </body>
 </html>
