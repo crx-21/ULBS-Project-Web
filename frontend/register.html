@@ -19,55 +19,18 @@
             <form id="Register">
                 <h1>Sign Up:</h1>
 
-                <input type="text" placeholder="Email" id="entry" name="email" required>
+                <input type="email" placeholder="Email" id="entry" name="email" required>
                 <input type="text" placeholder="Username" id="entry" name="username" required>
                 <input type="password" placeholder="Password" id="password" name="password" required>
                 <input type="hidden" name="role" value="tenant">
                 <div class="navigation-links">
                     <a href="login.html">Already have an account? Sign In</a>
                 </div>
-                <input type="submit" name="action" value="Register" id="button">
-
-                
-                
-                
-                
-            </form>
-            <script>
-            document.getElementById('Register').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const formData = new FormData(e.target);
-                const data = Object.fromEntries(formData.entries());
-                data.action = 'Register';
-
-                try {
-                    const response = await fetch('../backend/api.php', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(data)
-                    });
-
-                    const text = await response.text();
-                    try {
-                        const result = JSON.parse(text);
-                        if (result.success) {
-                            
-                            window.location.href = 'login.html';
-                        } else {
-                            alert('Registration failed: ' + result.message);
-                        }
-                    } catch (e) {
-                        console.error('Server response was not JSON:', text);
-                        alert('Server Error: ' + text);
-                    }
-                } catch (error) {
-                    console.error('Network Error:', error);
-                    alert('An error occurred during registration. Please try again.');
-                }
-            });
-            </script>
+                <input type="submit" name="action" value="Register" id="button">    
+            </form>  
         </div>
     </div>
-
+    <script src="auth.js"></script>
 </body>
+
 </html>

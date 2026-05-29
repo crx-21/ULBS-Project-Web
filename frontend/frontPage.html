@@ -6,14 +6,14 @@
     <link rel="stylesheet" href="styles/style.css">
     <title>Rental Platform</title>
 </head>
-<body>
+<body data-check-session="true">
     <div class="navigation-bar">
         <div class="logo">WelcomeHome</div>
         <ul class="nav-links">
             <li><a href="#browse">Browse</a></li>
             <li><a href="#to-rent">To Rent</a></li>
             <li><a href="#contact">Contact Us</a></li>
-            <li><a href="register.html" class="cta-button">Sign In</a></li>
+            <li id="nav-account"><a href="login.html" class="cta-button">Sign In</a></li>
         </ul>
     </div>
 
@@ -33,5 +33,6 @@
         <!--    luate prin javascript si afiseaza proprietatile, dar am nevoie de functionalitate in api-->
             </div>
 
+    <script src="auth.js"></script>
 </body>
 </html>
