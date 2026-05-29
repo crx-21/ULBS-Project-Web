@@ -34,21 +34,32 @@ body {
     }
 }
 
-#sign-in
-{
+#nav-account {
     position: absolute;
     right: 20px;
- background-color: white;
-  border: solid;
-  border-radius:15px;
-  color: #5f0d38;
-  padding: 15px;
-  text-align: center;
-  text-decoration: none;
-  display: flex;
-  justify-content: center;
-  font-size: 16px;
-  cursor: pointer;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.nav-user {
+    color: white;
+    font-weight: 600;
+}
+
+#sign-in,
+#logout-link {
+    background-color: white;
+    border: solid;
+    border-radius: 15px;
+    color: #5f0d38;
+    padding: 15px;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
 }
 
 #browse

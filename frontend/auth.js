@@ -71,6 +71,21 @@ formLogin?.addEventListener('submit', async (e) => {
 
 
 
+function bindSignInButton() {
+    document.getElementById('sign-in')?.addEventListener('click', () => {
+        window.location.href = 'login.html';
+    });
+}
+
+function bindLogoutButton() {
+    document.getElementById('logout-link')?.addEventListener('click', async () => {
+        await apiPost({ action: 'Logout' });
+        sessionStorage.removeItem('session_id');
+        sessionStorage.removeItem('username');
+        window.location.reload();
+    });
+}
+
 async function loadSessionState() {
     const navAccount = document.getElementById('nav-account');
     if (!navAccount) {
@@ -82,24 +97,17 @@ async function loadSessionState() {
         if (result.logged_in) {
             navAccount.innerHTML = `
                 <span class="nav-user">Hi, ${result.user.username}</span>
-                <a href="#" id="logout-link" class="cta-button">Log out</a>
+                <input type="button" value="Log out" id="logout-link">
             `;
-
-            document.getElementById('logout-link')?.addEventListener('click', async (e) => {
-                e.preventDefault();
-                await apiPost({ action: 'Logout' });
-                sessionStorage.removeItem('session_id');
-                sessionStorage.removeItem('username');
-                window.location.reload();
-            });
+            bindLogoutButton();
         } else {
-            navAccount.innerHTML = '<a href="login.html" class="cta-button">Sign In</a>';
+            navAccount.innerHTML = '<input type="button" value="Sign In" id="sign-in">';
+            bindSignInButton();
         }
     } catch (error) {
-      console.error('Session check failed:', error);
-
+        console.error('Session check failed:', error);
+        bindSignInButton();
     }
-
 }
 
 if (document.body.dataset.checkSession === 'true') 
