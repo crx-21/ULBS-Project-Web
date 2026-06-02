@@ -1,6 +1,9 @@
 # ULBS-Project-Web
 Project 2026 Web Programming.
 
+BA: Termen limita MVP 05.06.2026 ora 12:00
+
+
 Task-uri:
 
 BA:
