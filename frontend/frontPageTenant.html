@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/styleFrontPageTenant.css">
+    <title>Rental Platform</title>
+</head>
+<body>
+    <div class="navigation-bar">
+        <div class="logo">
+            <img src="../resources/logoRentifly.png">
+            Rentifly
+        </div>
+        <div class="nav-links">
+            <input type="button" value="Browse" id="browse">
+            <input type="button" value="Contact Us" id="contact">
+            <input type="button" value="Sign In" id="sign-in">
+    </div>
+    </div>
+    <div class="hero">
+    <div class="hero-section">
+        <h1 class="hero-title">Find a "home"</h1>
+        <h1 class="hero-subtitle">that you can call home.</h1>
+        <p class="hero-description">
+           Discover <span id="properties-counter" class="stat-highlight">0</span> properties across <span id="cities-counter" class="stat-highlight">0</span> amazing locations.
+    </p>
+        
+    </div>
+    </div>
+    <div class="search-bar">
+        <input type="text" placeholder="City or neighborhood..." class="search-input">
+        <input type="button" value="Search" class="search-button">
+    </div>
+
+
+<script>
+    fetch('../backend/api.php?action=GetCounts')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('properties-counter').textContent = data.properties;
+            document.getElementById('cities-counter').textContent = data.cities;
+        });
+
+</script>
+
+</body>
+</html>

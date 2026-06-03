@@ -39,10 +39,17 @@ switch ($request) {
             header("Location: ../frontend/login.html?error=invalidcredentials");
         }
         exit;
+
+        case 'GetCounts':
+           echo json_encode(['status'=>'success','properties'=>$propertyModel->GetPropertyCounts(),
+           'cities'=>$propertyModel->GetCityCount()
+           ]);
+            exit;
         
     default:
         
         header("Location: ../frontend/login.html");
         exit;
 }
+
 ?>
