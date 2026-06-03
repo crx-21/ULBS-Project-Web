@@ -4,6 +4,40 @@ const formLogin = document.getElementById('Login');
 const API_URL = '../backend/api.php';
 
 //Am implementat comunicare user efectueaza html http requests (login,signup) -> Auth.js -> api.php -> auth.js parseaza raspunsul. 
+function Popup()
+{
+  var popup = document.getElementById("PopupRegister");
+  popup.classList.toggle("show");
+}
+
+async function saveRoleAndClose(role) {
+    try {
+        const result = await apiPost({ 
+            action: 'SetRole', 
+            role: role 
+        });
+
+        if (result.success) {
+            // Remove the flag so it doesn't pop up again next time they reload
+            sessionStorage.removeItem('PopupRegister');
+            // Close the popup
+            Popup(); 
+        } else {
+            alert('Failed to save role: ' + (result.message || 'Unknown error'));
+        }
+    } catch (error) {
+        console.error('Error saving role:', error);
+        alert('An error occurred while saving your role.');
+    }
+}
+
+function setupRoleSelection() {
+    const tenantBtn = document.getElementById('btnTenant');
+    const landlordBtn = document.getElementById('btnLandlord');
+
+    tenantBtn?.addEventListener('click', () => saveRoleAndClose('tenant'));
+    landlordBtn?.addEventListener('click', () => saveRoleAndClose('landlord'));
+}
 
 
 async function apiPost(data) {
@@ -36,7 +70,10 @@ formRegister?.addEventListener('submit', async (e) => {
         if (result.success && result.logged_in) {
             sessionStorage.setItem('session_id', result.session_id);
             sessionStorage.setItem('username', result.user.username);
+
+            sessionStorage.setItem('PopupRegister', true);
             window.location.href = 'frontPage.html';
+            
         } else {
             alert('Registration failed: ' + (result.message || 'Unknown error'));
         }
@@ -100,6 +137,11 @@ async function loadSessionState() {
                 <input type="button" value="Log out" id="logout-link">
             `;
             bindLogoutButton();
+
+            if (sessionStorage.getItem('PopupRegister') === 'true') {
+                Popup();
+                setupRoleSelection();
+            }
         } else {
             navAccount.innerHTML = '<input type="button" value="Sign In" id="sign-in">';
             bindSignInButton();

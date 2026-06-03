@@ -37,6 +37,14 @@ class User {
         $stmt->execute([$userId]);
         return $stmt->fetch();
     }
+
+    public function updateRole($userId, $role) {
+       
+            $stmt = $this->db->prepare("UPDATE users SET role = ? WHERE userId = ?");
+            return $stmt->execute([$role, $userId]);
+        
+       
+    }
 }
 
 
