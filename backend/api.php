@@ -143,6 +143,12 @@ switch ($request) {
         }
         exit;
 
+        case 'GetCounts':
+           echo json_encode(['status'=>'success','properties'=>$propertyModel->GetPropertyCounts(),
+           'cities'=>$propertyModel->GetCityCount()
+           ]);
+            exit;
+        
     default:
         http_response_code(404);
         echo json_encode(["success" => false, "message" => "Invalid Action"]);
@@ -150,8 +156,4 @@ switch ($request) {
 
 }
 
-
-
 ?>
-
-

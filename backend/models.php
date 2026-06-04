@@ -100,6 +100,17 @@ class Property {
         $stmt = $this->db->prepare("DELETE FROM properties WHERE propertyId = ?");
         return $stmt->execute([$propertyId]);
     }
+
+    public function GetPropertyCounts() {
+            $stmtProp = $this->db->prepare("SELECT COUNT(propertyId) AS total_properties FROM properties");
+            $stmtProp->execute();
+            return $stmtProp->fetch(PDO::FETCH_ASSOC)['total_properties'];
+    }
+    public function GetCityCount() {
+        $stmt = $this->db->prepare("SELECT COUNT(DISTINCT location) AS total_cities FROM properties");
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC)['total_cities'];
+    }
 }
 
 
