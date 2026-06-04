@@ -6,12 +6,22 @@
     <link rel="stylesheet" href="styles/styleFrontPage.css">
     <title>Rental Platform</title>
 </head>
-<body>
+<body data-check-session="true">
     <div class="backgroundImagine">
         
     <div class="main-bar">
-    <div class="logo">
-        <img src="../resources/home.png"> RENTIFLY
+      <div class="navigation-bar">
+        <div class="logo">
+            <img src="../resources/logoRentifly.png">
+            Rentifly
+        </div>
+        <div class="nav-links">
+            <input type="button" value="Browse" id="browse">
+            <input type="button" value="To Rent" id="to-rent">
+            <input type="button" value="Contact Us" id="contact">
+            <div id="nav-account">
+                <input type="button" value="Sign In" id="sign-in">
+            </div>
     </div>
     <div class="buttonJoin">
         <a href="../frontend/login.html">
@@ -34,5 +44,23 @@
         </a>
     </div>
     </div>
+
+    <div id="PopupRegister">
+        <div class="popup-content">
+            <h2>Select Your Role</h2>
+            <p>Please choose how you intend to use our platform.</p>
+            
+            <div class="role-options">
+                <button id="btnTenant">I am a Tenant</button>
+                <button id="btnLandlord">I am a Landlord</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="featured-listings" id="browse">
+        <!--    luate prin javascript si afiseaza proprietatile, dar am nevoie de functionalitate in api-->
+            </div>
+
+    <script src="auth.js"></script>
 </body>
 </html>

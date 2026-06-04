@@ -19,7 +19,7 @@ class User {
         $stmt = $this->db->prepare(
             "INSERT INTO users (username, email, role, password_hash) VALUES (?, ?, ?, ?)"
         );
-        return $stmt->execute([$username,$hash ,$email, $role]);
+        return $stmt->execute([$username, $email, $role, $hash]);
     }
 
     public function Login($username, $password) {
@@ -36,6 +36,14 @@ class User {
         $stmt = $this->db->prepare("SELECT * FROM users WHERE userId = ?");
         $stmt->execute([$userId]);
         return $stmt->fetch();
+    }
+
+    public function updateRole($userId, $role) {
+       
+            $stmt = $this->db->prepare("UPDATE users SET role = ? WHERE userId = ?");
+            return $stmt->execute([$role, $userId]);
+        
+       
     }
 }
 
