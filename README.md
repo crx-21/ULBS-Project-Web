@@ -27,9 +27,9 @@ Developer
 Designer:
 - [x] Paleta de culori pentru site
 - [x] Logo-ul
-- [ ] Design pagina principala
+- [x] Design pagina principala
 - [x] Design Sign-In/Log In
-- [ ] Design pagini externe (Cont, For-Rent/To-Rent, Contact)
+- [x] Design pagini externe (Cont, For-Rent/To-Rent, Contact)
 - [ ] Animarea paginilor
 
 Tester:
