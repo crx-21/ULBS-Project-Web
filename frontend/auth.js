@@ -20,8 +20,14 @@ async function saveRoleAndClose(role) {
         if (result.success) {
             // Remove the flag so it doesn't pop up again next time they reload
             sessionStorage.removeItem('PopupRegister');
-            // Close the popup
-            Popup(); 
+            
+            const popup = document.getElementById("PopupRegister");
+            popup.classList.remove("show");
+            
+            // Wait 500ms for the animation to finish before hiding completely
+            setTimeout(() => {
+                popup.style.display = 'none';
+            }, 500);
         } else {
             alert('Failed to save role: ' + (result.message || 'Unknown error'));
         }
@@ -72,7 +78,7 @@ formRegister?.addEventListener('submit', async (e) => {
             sessionStorage.setItem('username', result.user.username);
 
             sessionStorage.setItem('PopupRegister', true);
-            window.location.href = 'frontPage.html';
+            window.location.href = 'frontPageTenant.html';
             
         } else {
             alert('Registration failed: ' + (result.message || 'Unknown error'));
@@ -96,7 +102,7 @@ formLogin?.addEventListener('submit', async (e) => {
         if (result.success && result.logged_in) {
             sessionStorage.setItem('session_id', result.session_id);
             sessionStorage.setItem('username', result.user.username);
-            window.location.href = 'frontPage.html';
+            window.location.href = 'frontPageTenant.html';
         } else {
             alert('Login failed: ' + (result.message || 'Unknown error'));
         }

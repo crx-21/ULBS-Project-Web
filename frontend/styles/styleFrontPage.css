@@ -42,32 +42,6 @@ body {
     left: 50px;
     margin-top: 150px;
     align-items: center;
-#nav-account {
-    position: absolute;
-    right: 20px;
-    display: flex;
-    gap: 12px;
-    align-items: center;
-}
-
-.nav-user {
-    color: white;
-    font-weight: 600;
-}
-
-#sign-in,
-#logout-link {
-    background-color: white;
-    border: solid;
-    border-radius: 15px;
-    color: #5f0d38;
-    padding: 15px;
-    text-align: center;
-    text-decoration: none;
-    display: flex;
-    justify-content: center;
-    font-size: 16px;
-    cursor: pointer;
 }
 
 .hero-title {
@@ -122,96 +96,8 @@ body {
      background-color: #5f0d38;
     color: white;
     padding: 30px 100px;
-   
-}
-
-
-#PopupRegister {
-    display: none;             
-    position: fixed;           
-    top: 0;
-    left: 0;
-    width: 100vw;              
-    height: 100vh;             
-    background-color: rgba(0, 0, 0, 0.45); 
-    
-    /* THE MAGIC BLUR EFFECT */
-    backdrop-filter: blur(8px); 
-    -webkit-backdrop-filter: blur(8px); 
-    
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;             
-}
-
-#PopupRegister.show {
-    display: flex;             
-}
-
-/* 2. The Actual Popup Box */
-.popup-content {
-    background-color: #ffffff;
-    width: 520px;              
-    height: 340px;             
-    padding: 40px;
-    border-radius: 16px;       
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); 
-    
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
     text-align: center;
-    box-sizing: border-box;    
-}
-
-/* 3. Typography inside the Box */
-.popup-content h2 {
-    margin: 0 0 10px 0;
-    font-size: 24px;
-    color: #333333;
-}
-
-.popup-content p {
-    margin: 0 0 25px 0;
-    font-size: 16px;
-    color: #666666;
-}
-
-/* 4. Container for the Choice Buttons */
-.role-options {
     display: flex;
-    gap: 20px;                 
-    width: 100%;
-    height: 140px;             
-}
-
-/* 5. The Choice Buttons */
-#btnTenant, #btnLandlord {
-    flex: 1;                   
-    height: 100%;              
-    background-color: #5f0d38; 
-    border: 2px solid #5f0d38; 
-    border-radius: 12px;
-    font-size: 18px;
-    font-weight: 600;
-    color: #ffffff;            /* White text */
+    font-size: 20px;
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Hover & Focus effects for the boxes */
-#btnTenant:hover, #btnLandlord:hover {
-    background-color: #7a1148; /* A brighter hover shade */
-    border-color: #7a1148;
-    transform: translateY(-3px); 
-    box-shadow: 0 5px 15px rgba(95, 13, 56, 0.4); /* A tinted shadow to match */
-}
-
-#btnTenant:active, #btnLandlord:active {
-    transform: translateY(0);
 }
