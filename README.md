@@ -16,6 +16,8 @@ BA:
 - [ ] Vreau sa iasa in evidenta cele care urmeaza sa fie libere si cele la reducere.
 - [ ] Cand dai click pe un apartament (din punctul de vedere al propietarului), vreau sa vad cate facturi sunt, cate plati s-au facut, ce mai e de platit
 - [ ] Partea de facturi trebuie sa aiba panou general cu toate facturile de la toate apartamentele (partea de propietar/agent) avand grafice, taxe, venit, etc
+- [ ] Agentul/proprietarul sa primeasca mail de fiecare data cand se face o plata (notificare)
+- [ ] User-ul (cumparatorul) trebuie, in momentul cand se inregistreaza si vrea sa cumpere/inchirieze un apartament, sa aiba posibilitatea sa isi bage buletinul ca sa se poata sa se faca platile/facturile facute automat
 
 Developer
 - [ ] Interfata site (Pagina principala)
