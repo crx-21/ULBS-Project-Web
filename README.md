@@ -15,6 +15,7 @@ BA:
 - [ ] Apartamentele vor fi afisate 4 cate 4. Exemplu: prima linie sunt 4 apartamente, a 2-a linie 4 apartamente si tot asa.
 - [ ] Vreau sa iasa in evidenta cele care urmeaza sa fie libere si cele la reducere.
 - [ ] Cand dai click pe un apartament (din punctul de vedere al propietarului), vreau sa vad cate facturi sunt, cate plati s-au facut, ce mai e de platit
+- [ ] Partea de facturi trebuie sa aiba panou general cu toate facturile de la toate apartamentele (partea de propietar/agent) avand grafice, taxe, venit, etc
 
 Developer
 - [ ] Interfata site (Pagina principala)
