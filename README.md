@@ -14,6 +14,7 @@ BA:
 - [ ] Cand adaugi apartamente, in meniul de adaugare (dashboard), user-ul trebuie sa aiba posibilitatea sa adauge mai multe poze, o descriere generala (de exemplu: suprafata, zona, etajul, anul constructiei, confortul, etc), un titlu anuntului (cu o restrictie pana in 50-60 de caractere si o restrictie pentru a putea avea posibilitatea sa scrie tot ce-i trece prin cap), numarul de telefon si o poza de profil.
 - [ ] Apartamentele vor fi afisate 4 cate 4. Exemplu: prima linie sunt 4 apartamente, a 2-a linie 4 apartamente si tot asa.
 - [ ] Vreau sa iasa in evidenta cele care urmeaza sa fie libere si cele la reducere.
+- [ ] Cand dai click pe un apartament (din punctul de vedere al propietarului), vreau sa vad cate facturi sunt, cate plati s-au facut, ce mai e de platit
 
 Developer
 - [ ] Interfata site (Pagina principala)
