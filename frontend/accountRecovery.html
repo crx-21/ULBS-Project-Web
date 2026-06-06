@@ -9,21 +9,21 @@
 <body>
 
     <div class="container">
+        <img src="../resources/home.png" id="logo">
         <h2>Account Recovery</h2>
-    
+        <p id="instruction">Enter your email to receive a recovery code.</p>
         <div id="step1">
-            <p>Enter your email to receive a recovery code.</p>
+            <p>Email Address:</p>
             <input type="email" id="email" placeholder="you@example.com" required>
             <button onclick="requestCode()">Send Code</button>
         </div>
-    
+        
         <div id="step2" class="hidden">
-            <p>Enter the 6-digit code sent to your email.</p>
             <input type="text" id="code" placeholder="123456" required>
             <input type="password" id="newPassword" placeholder="New Password" required>
             <button onclick="resetPassword()">Reset Password</button>
         </div>
-    
+        <p id="BackToLogin">Remember your password? <a href="login.html">Sign In</a></p>
         <p id="message"></p>
     </div>
 

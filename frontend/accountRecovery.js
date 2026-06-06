@@ -19,6 +19,7 @@ let userEmail = '';
             document.getElementById('message').innerText = data.message;
             
             if (res.ok) {
+                document.getElementById('instruction').innerText = 'Enter the 6-digit code sent to your email.';
                 document.getElementById('step1').classList.add('hidden');
                 document.getElementById('step2').classList.remove('hidden');
             }
