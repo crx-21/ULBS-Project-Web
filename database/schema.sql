@@ -26,6 +26,7 @@ CREATE TABLE properties (
     location VARCHAR(255) NOT NULL,
     rent DECIMAL(10, 2) NOT NULL,
     lease_term VARCHAR(50) NOT NULL,
+    photos TEXT DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (landlordId) REFERENCES users(userId)
 );
@@ -50,4 +51,3 @@ CREATE TABLE reviews (
     FOREIGN KEY (propertyId) REFERENCES properties(propertyId),
     FOREIGN KEY (tenantId) REFERENCES users(userId)
 );
-
