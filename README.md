@@ -23,7 +23,7 @@ Developer
 - [ ] Interfata site (Pagina principala)
 - [ ] Implementarea paginilor externe (Cont, For-Rent/To-Rent, Contact)
 - [x] Creearea bazei de date
-- [ ] Functionalitatea contului
+- [x] Functionalitatea contului
 - [ ] Functionalitatea site-ului
 - [ ] Legatura dintre back-end si front-end
 - [ ] Implementarea design-ului
