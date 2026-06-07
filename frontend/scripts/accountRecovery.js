@@ -9,7 +9,7 @@ let userEmail = '';
 
         try {
             // Target the single file
-            const res = await fetch('../backend/password_recovery.php', {
+            const res = await fetch('/ULBS-Project-Web/backend/password_recovery.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 // Include the action so PHP knows to trigger send_code()
@@ -38,7 +38,7 @@ let userEmail = '';
 
         try {
             // Target the single file
-            const res = await fetch('../backend/password_recovery.php', {
+            const res = await fetch('/ULBS-Project-Web/backend/password_recovery.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 // Include the action so PHP knows to trigger reset_data()

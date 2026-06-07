@@ -4,46 +4,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles/styleFrontPageLandlord.css">
+    <link rel="stylesheet" href="../styles/styleFrontPageLandlord.css">
     <title>Rental Platform</title>
 </head>
 
 <body>
     <div class="container-admin">
         <div class="header-row">
-            <img src="../resources/home.png" id="img1">
+            <img src="../../resources/home.png" id="img1">
             <h1>RENTIFLY</h1>
         </div>
+
         <div class="middle-row">
-            <img src="../resources/admin.png" id="img2">
+            <img src="../../resources/admin.png" id="img2">
             <h2>ADMIN</h2>
             <p>In case of emergency don't hesitate to call us!</p>
             <p>0753 317 434 - Turcu Daniel</p>
             <input type="button" value="Log Out" id="Logout">
+
+            <div class="inbox-wrapper">
+                <input type="button" value="📬 Inbox" id="btn-inbox">
+                <span class="inbox-badge" id="inbox-badge" style="display:none;">0</span>
+            </div>
+
+            <div id="inbox-panel" style="display:none;">
+                <div id="inbox-list"></div>
+            </div>
         </div>
+
     </div>
 
     <div class="container-landlord">
 
-        <!-- Top bar -->
-        <div class="landlord-topbar">
-            <h2 class="landlord-title">My Properties</h2>
-            <button class="btn-add-property" id="btn-create-post">+ Add New Property</button>
+        <!-- Properties area -->
+        <div id="container-landlord-content">
+
+            <!-- Top bar -->
+            <div class="landlord-topbar">
+                <h2 class="landlord-title">My Properties</h2>
+                <button class="btn-add-property" id="btn-create-post">+ Add New Property</button>
+            </div>
+
+            <!-- Error banner -->
+            <div id="error-banner"></div>
+
+            <!-- Empty state (shown when no properties) -->
+            <div id="empty-state">
+                <div class="empty-icon">🏠</div>
+                <h3>No posts created yet</h3>
+                <p>You haven't listed any properties. Add your first one!</p>
+                <button class="btn-add-property" id="btn-create-post-empty">+ Create a Post</button>
+            </div>
+
+            <!-- Properties grid (shown when properties exist) -->
+            <div id="properties-grid"></div>
+
         </div>
 
-        <!-- Error banner -->
-        <div id="error-banner"></div>
-
-        <!-- Empty state (shown when no properties) -->
-        <div id="empty-state">
-            <div class="empty-icon">🏠</div>
-            <h3>No posts created yet</h3>
-            <p>You haven't listed any properties. Add your first one!</p>
-            <button class="btn-add-property" id="btn-create-post-empty">+ Create a Post</button>
+        <!-- Inbox full panel (shown when inbox is open) -->
+        <div id="inbox-full-panel" style="display:none;">
+            <div class="inbox-topbar">
+                <h2 class="landlord-title">📬 Applications</h2>
+            </div>
+            <div id="inbox-applications-list"></div>
         </div>
-
-        <!-- Properties grid (shown when properties exist) -->
-        <div id="properties-grid"></div>
 
     </div>
 
@@ -98,8 +122,9 @@
             </form>
         </div>
     </div>
-    <script src="auth.js"></script>
-    <script src="landlordPosts.js"></script>
+
+    <script src="../scripts/auth.js"></script>
+    <script src="../scripts/landlordPosts.js"></script>
     <script>
         document.getElementById('btn-create-post-empty')
             ?.addEventListener('click', openCreateModal);

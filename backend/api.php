@@ -170,10 +170,39 @@ switch ($request) {
         getAvailableProperties($conn);
         exit;
 
+    case 'apply_for_property':
+            requireTenant();
+            applyForProperty($conn, $inputData);
+            exit;
+        
+    case 'get_tenant_application':
+            requireTenant();
+            getTenantApplication($conn);
+            exit;
+
+    case 'get_applications':
+        requireLandlord();
+        getLandlordApplications($conn);
+        exit;
+            
+        
+            
+    // This one is called via GET from email link
+    case 'email_action':
+        handleApplicationByToken($conn, $_GET);
+        exit;
+    
+
+    case 'handle_application':
+        requireLandlord();
+        handleApplicationFromInbox($conn, $inputData);
+        exit;  
+
     default:
         http_response_code(404);
         echo json_encode(["success" => false, "message" => "Invalid Action"]);
         exit;
+    
 }
 
 // ─── Auth Guard ───────────────────────────────────────────────────────────────
@@ -312,16 +341,21 @@ function deleteProperty($conn, array $input) {
         return;
     }
 
-    $stmt = $conn->prepare("
-        DELETE FROM properties
-        WHERE propertyId = :propertyId AND landlordId = :landlordId
-    ");
+    // Make sure property belongs to this landlord
+    $stmt = $conn->prepare("SELECT propertyId FROM properties WHERE propertyId = :propertyId AND landlordId = :landlordId");
     $stmt->execute([':propertyId' => $propertyId, ':landlordId' => $landlordId]);
-
-    if ($stmt->rowCount() === 0) {
+    if (!$stmt->fetch()) {
         echo json_encode(['success' => false, 'message' => 'Property not found.']);
         return;
     }
+
+    // Delete related applications first
+    $stmt = $conn->prepare("DELETE FROM applications WHERE propertyId = :propertyId");
+    $stmt->execute([':propertyId' => $propertyId]);
+
+    // Now delete the property
+    $stmt = $conn->prepare("DELETE FROM properties WHERE propertyId = :propertyId AND landlordId = :landlordId");
+    $stmt->execute([':propertyId' => $propertyId, ':landlordId' => $landlordId]);
 
     echo json_encode(['success' => true]);
 }
@@ -405,6 +439,308 @@ function getAvailableProperties($conn) {
     $properties = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     echo json_encode(['success' => true, 'properties' => $properties]);
+}
+
+function requireTenant() {
+    if (empty($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'tenant') {
+        echo json_encode(['success' => false, 'message' => 'Unauthorized.']);
+        exit;
+    }
+}
+
+function getTenantApplication($conn) {
+    $tenantId = $_SESSION['user_id'];
+
+    $stmt = $conn->prepare("
+        SELECT a.applicationId, a.propertyId, a.status, a.created_at,
+               p.title, p.location, p.rent
+        FROM applications a
+        JOIN properties p ON p.propertyId = a.propertyId
+        WHERE a.tenantId = :tenantId
+        LIMIT 1
+    ");
+    $stmt->execute([':tenantId' => $tenantId]);
+    $application = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    echo json_encode([
+        'success'     => true,
+        'has_applied' => $application ? true : false,
+        'application' => $application ?: null
+    ]);
+}
+
+function applyForProperty($conn, array $input) {
+    $tenantId   = $_SESSION['user_id'];
+    $propertyId = (int)($input['propertyId'] ?? 0);
+    $title      = trim($input['title'] ?? '');
+    $message    = trim($input['message'] ?? '');
+
+    if (!$propertyId) {
+        echo json_encode(['success' => false, 'message' => 'Invalid property ID.']);
+        return;
+    }
+
+    if (!$title || !$message) {
+        echo json_encode(['success' => false, 'message' => 'Title and message are required.']);
+        return;
+    }
+
+    // Check tenant hasn't already applied anywhere
+    $stmt = $conn->prepare("SELECT applicationId FROM applications WHERE tenantId = :tenantId");
+    $stmt->execute([':tenantId' => $tenantId]);
+    if ($stmt->fetch()) {
+        echo json_encode(['success' => false, 'message' => 'You have already applied for a property.']);
+        return;
+    }
+
+    // Get property + landlord email in one query
+    $stmt = $conn->prepare("
+        SELECT p.propertyId, p.title AS propertyTitle, p.location,
+               u.email AS landlordEmail, u.username AS landlordName
+        FROM properties p
+        JOIN users u ON u.userId = p.landlordId
+        WHERE p.propertyId = :propertyId
+    ");
+    $stmt->execute([':propertyId' => $propertyId]);
+    $property = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$property) {
+        echo json_encode(['success' => false, 'message' => 'Property not found.']);
+        return;
+    }
+
+    // Get tenant username
+    $stmt = $conn->prepare("SELECT username FROM users WHERE userId = :tenantId");
+    $stmt->execute([':tenantId' => $tenantId]);
+    $tenant = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Insert application
+    $stmt = $conn->prepare("
+        INSERT INTO applications (propertyId, tenantId, status, title, message)
+        VALUES (:propertyId, :tenantId, 'pending', :title, :message)
+    ");
+    $stmt->execute([
+        ':propertyId' => $propertyId,
+        ':tenantId'   => $tenantId,
+        ':title'      => $title,
+        ':message'    => $message
+    ]);
+
+    $applicationId = $conn->lastInsertId();
+
+    // Send email to landlord
+    sendApplicationEmail(
+        $conn,
+        $property['landlordEmail'],
+        $property['landlordName'],
+        $tenant['username'],
+        $property['propertyTitle'],
+        $property['location'],
+        $title,
+        $message,
+        $applicationId
+    );
+
+    echo json_encode(['success' => true, 'applicationId' => $applicationId]);
+}
+
+function sendApplicationEmail($conn, $landlordEmail, $landlordName, $tenantName, $propertyTitle, $location, $appTitle, $appMessage, $applicationId) {
+    require_once __DIR__ . '/vendor/autoload.php';
+    require_once __DIR__ . '/config.php';
+
+    // Generate secure token
+    $token = bin2hex(random_bytes(32));
+    $stmt  = $conn->prepare("UPDATE applications SET action_token = :token WHERE applicationId = :id");
+    $stmt->execute([':token' => $token, ':id' => $applicationId]);
+
+    $baseUrl     = 'http://localhost/ULBS-Project-Web/backend/api.php';
+    $approveUrl = $baseUrl . '?action=email_action&token=' . $token . '&decision=approved';
+    $rejectUrl  = $baseUrl . '?action=email_action&token=' . $token . '&decision=rejected';
+
+    $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+
+    try {
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = MAIL_USERNAME;
+        $mail->Password   = MAIL_PASSWORD;
+        $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = 587;
+
+        $mail->setFrom(MAIL_USERNAME, MAIL_FROM_NAME);
+        $mail->addAddress($landlordEmail, $landlordName);
+
+        $mail->isHTML(true);
+        $mail->Subject = "New Application: {$appTitle}";
+        $mail->Body    = "
+            <div style='font-family: Montserrat, sans-serif; max-width: 600px; margin: auto;'>
+                <div style='background: #5c0a28; padding: 24px; border-radius: 12px 12px 0 0;'>
+                    <h1 style='color: white; margin: 0; font-size: 1.4rem;'>New Rental Application</h1>
+                </div>
+                <div style='background: #fff; padding: 28px; border: 1px solid #e8d8de; border-radius: 0 0 12px 12px;'>
+                    <p style='color: #555;'>Hi <strong>{$landlordName}</strong>,</p>
+                    <p style='color: #555;'>You have received a new application for your property.</p>
+
+                    <div style='background: #f5f0f2; border-radius: 10px; padding: 16px; margin: 20px 0;'>
+                        <p style='margin: 0 0 6px; color: #5c0a28; font-weight: 700;'>🏠 {$propertyTitle}</p>
+                        <p style='margin: 0; color: #888; font-size: 0.9rem;'>📍 {$location}</p>
+                    </div>
+
+                    <div style='border-left: 4px solid #5c0a28; padding-left: 16px; margin: 20px 0;'>
+                        <p style='margin: 0 0 4px; font-weight: 700; color: #333;'>From: {$tenantName}</p>
+                        <p style='margin: 0 0 12px; font-weight: 600; color: #5c0a28;'>{$appTitle}</p>
+                        <p style='margin: 0; color: #666; line-height: 1.6;'>{$appMessage}</p>
+                    </div>
+
+                    <div style='display: flex; gap: 12px; margin-top: 28px;'>
+                        <a href='{$approveUrl}' style='flex: 1; text-align: center; padding: 14px; background: #2dc653; color: white; text-decoration: none; border-radius: 50px; font-weight: 700; font-size: 1rem;'>
+                            ✓ Accept
+                        </a>
+                        <a href='{$rejectUrl}' style='flex: 1; text-align: center; padding: 14px; background: #e63946; color: white; text-decoration: none; border-radius: 50px; font-weight: 700; font-size: 1rem;'>
+                            ✕ Reject
+                        </a>
+                    </div>
+
+                    <p style='color: #aaa; font-size: 0.8rem; margin-top: 24px; text-align: center;'>
+                        You can also manage applications from your Rentifly dashboard.
+                    </p>
+                </div>
+            </div>
+        ";
+
+        $mail->send();
+    } catch (Exception $e) {
+        error_log('Mailer error: ' . $mail->ErrorInfo);
+    }
+}
+
+function getLandlordApplications($conn) {
+    $landlordId = $_SESSION['user_id'];
+
+    $stmt = $conn->prepare("
+        SELECT a.applicationId, a.status, a.title, a.message, a.created_at,
+               u.username AS tenantName, u.email AS tenantEmail,
+               p.title AS propertyTitle, p.location
+        FROM applications a
+        JOIN users u ON u.userId = a.tenantId
+        JOIN properties p ON p.propertyId = a.propertyId
+        WHERE p.landlordId = :landlordId
+        ORDER BY a.created_at DESC
+    ");
+    $stmt->execute([':landlordId' => $landlordId]);
+    $applications = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $pending = array_filter($applications, fn($a) => $a['status'] === 'pending');
+
+    echo json_encode([
+        'success'      => true,
+        'applications' => $applications,
+        'pending_count'=> count($pending)
+    ]);
+}
+
+function handleApplicationByToken($conn, array $input) {
+    $token  = trim($input['token'] ?? '');
+    $action = trim($input['decision'] ?? $input['action'] ?? '');
+
+    if (!$token || !in_array($action, ['approved', 'rejected'])) {
+        echo json_encode(['success' => false, 'message' => 'Invalid request.']);
+        return;
+    }
+
+    $stmt = $conn->prepare("SELECT applicationId, status FROM applications WHERE action_token = :token");
+    $stmt->execute([':token' => $token]);
+    $application = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$application) {
+        echo json_encode(['success' => false, 'message' => 'Application not found.']);
+        return;
+    }
+
+    if ($application['status'] !== 'pending') {
+        echo json_encode(['success' => false, 'message' => 'Application already ' . $application['status'] . '.']);
+        return;
+    }
+
+    $stmt = $conn->prepare("UPDATE applications SET status = :status WHERE action_token = :token");
+    $stmt->execute([':status' => $action, ':token' => $token]);
+
+    // If approved, mark property as occupied
+    if ($action === 'approved') {
+        $stmt = $conn->prepare("
+            UPDATE properties SET status = 'occupied'
+            WHERE propertyId = (SELECT propertyId FROM applications WHERE action_token = :token)
+        ");
+        $stmt->execute([':token' => $token]);
+    }
+
+    // Redirect to a nice confirmation page
+    header('Location: /ULBS-Project-Web/frontend/dashboard/applicationResult.html?action=' . $action);
+    exit;
+}
+
+function handleApplicationFromInbox($conn, array $input) {
+    $landlordId    = $_SESSION['user_id'];
+    $applicationId = (int)($input['applicationId'] ?? 0);
+    $decision      = trim($input['decision'] ?? '');
+
+    if (!$applicationId) {
+        echo json_encode(['success' => false, 'message' => 'Invalid application ID.']);
+        return;
+    }
+
+    if (!in_array($decision, ['approved', 'rejected'])) {
+        echo json_encode(['success' => false, 'message' => 'Invalid decision.']);
+        return;
+    }
+
+    // Verify application belongs to this landlord's property
+    $stmt = $conn->prepare("
+        SELECT a.applicationId, a.status, a.propertyId
+        FROM applications a
+        JOIN properties p ON p.propertyId = a.propertyId
+        WHERE a.applicationId = :applicationId 
+        AND p.landlordId = :landlordId
+    ");
+    $stmt->execute([
+        ':applicationId' => $applicationId,
+        ':landlordId'    => $landlordId
+    ]);
+    $application = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$application) {
+        echo json_encode(['success' => false, 'message' => 'Application not found.']);
+        return;
+    }
+
+    if ($application['status'] !== 'pending') {
+        echo json_encode(['success' => false, 'message' => 'Application already ' . $application['status'] . '.']);
+        return;
+    }
+
+    // Update application status
+    $stmt = $conn->prepare("
+        UPDATE applications 
+        SET status = :status 
+        WHERE applicationId = :applicationId
+    ");
+    $stmt->execute([
+        ':status'        => $decision,
+        ':applicationId' => $applicationId
+    ]);
+
+    // If approved mark property as occupied
+    if ($decision === 'approved') {
+        $stmt = $conn->prepare("
+            UPDATE properties 
+            SET status = 'occupied' 
+            WHERE propertyId = :propertyId
+        ");
+        $stmt->execute([':propertyId' => $application['propertyId']]);
+    }
+
+    echo json_encode(['success' => true, 'message' => 'Application ' . $decision . ' successfully.']);
 }
 
 ?>

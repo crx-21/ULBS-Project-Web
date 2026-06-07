@@ -1,7 +1,7 @@
 const formRegister = document.getElementById('Register');
 const formLogin = document.getElementById('Login');
 
-const API_URL = '../backend/api.php';
+const API_URL = '/ULBS-Project-Web/backend/api.php';
 
 //Am implementat comunicare user efectueaza html http requests (login,signup) -> Auth.js -> api.php -> auth.js parseaza raspunsul. 
 function Popup()
@@ -29,9 +29,9 @@ async function saveRoleAndClose(role) {
 
             // Redirect based on chosen role
             if (role === 'landlord') {
-                window.location.href = 'frontPageLandlord.html';
+                window.location.href = '../dashboard/frontPageLandlord.html';
             } else {
-                window.location.href = 'frontPageTenant.html';
+                window.location.href = '../dashboard/frontPageTenant.html';
             }
 
         } else {
@@ -84,7 +84,7 @@ formRegister?.addEventListener('submit', async (e) => {
             sessionStorage.setItem('username', result.user.username);
 
             sessionStorage.setItem('PopupRegister', true);
-            window.location.href = 'frontPageTenant.html';
+            window.location.href = '../dashboard/frontPageTenant.html';
             
         } else {
             alert('Registration failed: ' + (result.message || 'Unknown error'));
@@ -111,9 +111,9 @@ formLogin?.addEventListener('submit', async (e) => {
 
             //Redirect based on role returned by API
             if (result.user.role === 'landlord') {
-                window.location.href = 'frontPageLandlord.html';
+                window.location.href = '../dashboard/frontPageLandlord.html';
             } else {
-                window.location.href = 'frontPageTenant.html';
+                window.location.href = '../dashboard/frontPageTenant.html';
             }
 
         } else {
@@ -129,7 +129,7 @@ formLogin?.addEventListener('submit', async (e) => {
 
 function bindSignInButton() {
     document.getElementById('sign-in')?.addEventListener('click', () => {
-        window.location.href = 'login.html';
+        window.location.href = '../auth/login.html';
     });
 }
 
@@ -185,20 +185,20 @@ async function initLogoutButton(buttonId = 'Logout') {
 
         if (!result.logged_in) {
             logoutBtn.value = 'Log In';
-            logoutBtn.onclick = () => window.location.href = 'login.html';
+            logoutBtn.onclick = () => window.location.href = '../auth/login.html';
         } else {
             logoutBtn.value = 'Log Out';
             logoutBtn.onclick = async () => {
                 await apiPost({ action: 'Logout' });
                 sessionStorage.clear();
-                window.location.href = 'login.html';
+                window.location.href = '..1/auth/login.html';
             };
         }
 
     } catch (err) {
         console.error('Session check failed:', err);
         logoutBtn.value = 'Log In';
-        logoutBtn.onclick = () => window.location.href = 'login.html';
+        logoutBtn.onclick = () => window.location.href = '../auth/login.html';
     }
 }
 

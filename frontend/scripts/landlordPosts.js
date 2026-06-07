@@ -3,6 +3,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
     await initLogoutButton();
     await loadProperties();
+    await loadInbox();
     document.getElementById('field-photo')?.addEventListener('change', (e) => {
         const preview = document.getElementById('photo-preview');
         const file = e.target.files[0];
@@ -16,6 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
     document.getElementById('btn-create-post')?.addEventListener('click', () => openCreateModal());
     document.getElementById('btn-create-post-empty')?.addEventListener('click', () => openCreateModal());
+    document.getElementById('btn-inbox')?.addEventListener('click', () => toggleInbox());
     document.getElementById('modal-overlay')?.addEventListener('click', (e) => {
         if (e.target === document.getElementById('modal-overlay')) closeModal();
     });
@@ -183,7 +185,7 @@ async function uploadPhoto(propertyId) {
     formData.append('photo', input.files[0]);
 
     try {
-        const res = await fetch('../backend/api.php', {
+        const res = await fetch('/ULBS-Project-Web/backend/api.php', {
             method: 'POST',
             credentials: 'same-origin',
             body: formData  // no Content-Type header — browser sets it automatically
@@ -240,4 +242,115 @@ function escapeHtml(str) {
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
+}
+
+async function handleApplication(applicationId, decision, btn) {
+    btn.disabled = true;
+    btn.textContent = 'Processing...';
+
+    try {
+        const data = await apiPost({
+            action:        'handle_application',
+            applicationId: applicationId,
+            decision:      decision
+        });
+
+        if (data.success) {
+                    window.location.href = '/ULBS-Project-Web/frontend/dashboard/applicationResult.html?action=' + decision;
+        } else {
+            showError(data.message || 'Failed to update application.');
+            btn.disabled = false;
+            btn.textContent = decision === 'approved' ? '✓ Accept' : '✕ Reject';
+        }
+
+    } catch (err) {
+        showError('Network error. Please try again.');
+        btn.disabled = false;
+        btn.textContent = decision === 'approved' ? '✓ Accept' : '✕ Reject';
+    }
+}
+
+async function loadInbox() {
+    const data = await apiPost({ action: 'get_applications' });
+    if (!data.success) return;
+
+    const badge    = document.getElementById('inbox-badge');
+    const list     = document.getElementById('inbox-list');
+    const fullList = document.getElementById('inbox-applications-list');
+    if (!badge || !list || !fullList) return;
+
+    if (data.pending_count > 0) {
+        badge.textContent   = data.pending_count;
+        badge.style.display = 'flex';
+    } else {
+        badge.style.display = 'none';
+    }
+
+    // Sidebar mini list
+    list.innerHTML = '';
+    if (data.applications.length === 0) {
+        list.innerHTML = '<p class="inbox-empty">No applications yet.</p>';
+    } else {
+        data.applications.forEach(app => {
+            const item = document.createElement('div');
+            item.className = 'inbox-item';
+            item.innerHTML = `
+                <div class="inbox-item-header">
+                    <span class="inbox-tenant">${escapeHtml(app.tenantName)}</span>
+                    <span class="inbox-status status-${app.status}">${app.status}</span>
+                </div>
+                <p class="inbox-property">🏠 ${escapeHtml(app.propertyTitle)}</p>
+                <p class="inbox-title">${escapeHtml(app.title)}</p>
+                <p class="inbox-message">${escapeHtml(app.message)}</p>
+                <span class="inbox-date">${formatDate(app.created_at)}</span>
+            `;
+            list.appendChild(item);
+        });
+    }
+
+    // Full panel list
+    fullList.innerHTML = '';
+    if (data.applications.length === 0) {
+        fullList.innerHTML = '<p class="inbox-empty">No applications yet.</p>';
+    } else {
+        data.applications.forEach(app => {
+            const item = document.createElement('div');
+            item.className = 'inbox-full-item';
+            item.innerHTML = `
+                <div class="inbox-full-header">
+                    <div>
+                        <h3 class="inbox-full-title">${escapeHtml(app.title)}</h3>
+                        <p class="inbox-full-property">🏠 ${escapeHtml(app.propertyTitle)} — 📍 ${escapeHtml(app.location)}</p>
+                    </div>
+                    <span class="inbox-status status-${app.status}">${app.status}</span>
+                </div>
+                <div class="inbox-full-from">
+                    <span>👤 ${escapeHtml(app.tenantName)}</span>
+                    <span class="inbox-date">${formatDate(app.created_at)}</span>
+                </div>
+                <p class="inbox-full-message">${escapeHtml(app.message)}</p>
+                ${app.status === 'pending' ? `
+                <div class="inbox-full-actions">
+                    <button class="btn-accept" onclick="handleApplication(${app.applicationId}, 'approved', this)">✓ Accept</button>
+                    <button class="btn-reject" onclick="handleApplication(${app.applicationId}, 'rejected', this)">✕ Reject</button>
+                </div>
+                ` : ''}
+            `;
+            fullList.appendChild(item);
+        });
+    }
+}
+
+function toggleInbox() {
+    const fullPanel      = document.getElementById('inbox-full-panel');
+    const propertiesArea = document.getElementById('container-landlord-content');
+    const isOpen         = fullPanel.style.display !== 'none';
+
+    if (isOpen) {
+        fullPanel.style.display      = 'none';
+        propertiesArea.style.display = 'block';
+    } else {
+        fullPanel.style.display      = 'block';
+        propertiesArea.style.display = 'none';
+    }
 }

@@ -7,7 +7,7 @@ ai aici detaliile despre ficeare schimbare/adaugare
 
 partea 1 - sa vada tenantul prop pe prima pagina ✓
 partea 1.5 - propietatile sa aiba state de open sau closed ✓
-partea 2 - tenantul sa poata sa faca un application pt chirie
-partea 3 - landlordul sa primeasca notificare cu application-ul tenantului
+partea 2 - tenantul sa poata sa faca un application pt chirie ✓
+partea 3 - landlordul sa primeasca notificare cu application-ul tenantului ✓
 partea 3.5 - landlordul sa poata accepta sau refuza tenantul (optional: in functie de detaliile primite)
 partea 4 - daca application-ul este acceptat de landlord, tenantul sa poata vedea chiria 
