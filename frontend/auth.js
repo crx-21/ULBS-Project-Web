@@ -18,10 +18,22 @@ async function saveRoleAndClose(role) {
         });
 
         if (result.success) {
-            // Remove the flag so it doesn't pop up again next time they reload
             sessionStorage.removeItem('PopupRegister');
-            // Close the popup
-            Popup(); 
+            
+            const popup = document.getElementById("PopupRegister");
+            popup.classList.remove("show");
+            
+            setTimeout(() => {
+                popup.style.display = 'none';
+            }, 500);
+
+            // Redirect based on chosen role
+            if (role === 'landlord') {
+                window.location.href = 'frontPageLandlord.html';
+            } else {
+                window.location.href = 'frontPageTenant.html';
+            }
+
         } else {
             alert('Failed to save role: ' + (result.message || 'Unknown error'));
         }
@@ -72,7 +84,7 @@ formRegister?.addEventListener('submit', async (e) => {
             sessionStorage.setItem('username', result.user.username);
 
             sessionStorage.setItem('PopupRegister', true);
-            window.location.href = 'frontPage.html';
+            window.location.href = 'frontPageTenant.html';
             
         } else {
             alert('Registration failed: ' + (result.message || 'Unknown error'));
@@ -96,7 +108,14 @@ formLogin?.addEventListener('submit', async (e) => {
         if (result.success && result.logged_in) {
             sessionStorage.setItem('session_id', result.session_id);
             sessionStorage.setItem('username', result.user.username);
-            window.location.href = 'frontPage.html';
+
+            //Redirect based on role returned by API
+            if (result.user.role === 'landlord') {
+                window.location.href = 'frontPageLandlord.html';
+            } else {
+                window.location.href = 'frontPageTenant.html';
+            }
+
         } else {
             alert('Login failed: ' + (result.message || 'Unknown error'));
         }
@@ -156,5 +175,33 @@ if (document.body.dataset.checkSession === 'true')
 {
 loadSessionState();
 }
+
+async function initLogoutButton(buttonId = 'Logout') {
+    const logoutBtn = document.getElementById(buttonId);
+    if (!logoutBtn) return;
+
+    try {
+        const result = await apiPost({ action: 'Session' });
+
+        if (!result.logged_in) {
+            logoutBtn.value = 'Log In';
+            logoutBtn.onclick = () => window.location.href = 'login.html';
+        } else {
+            logoutBtn.value = 'Log Out';
+            logoutBtn.onclick = async () => {
+                await apiPost({ action: 'Logout' });
+                sessionStorage.clear();
+                window.location.href = 'login.html';
+            };
+        }
+
+    } catch (err) {
+        console.error('Session check failed:', err);
+        logoutBtn.value = 'Log In';
+        logoutBtn.onclick = () => window.location.href = 'login.html';
+    }
+}
+
+
 
 

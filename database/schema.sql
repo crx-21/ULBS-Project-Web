@@ -11,6 +11,13 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE password_resets (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    code VARCHAR(6) NOT NULL,
+    expires_at DATETIME NOT NULL
+);
+
 CREATE TABLE properties (
     propertyId INT AUTO_INCREMENT PRIMARY KEY,
     landlordId INT NOT NULL,
@@ -19,6 +26,7 @@ CREATE TABLE properties (
     location VARCHAR(255) NOT NULL,
     rent DECIMAL(10, 2) NOT NULL,
     lease_term VARCHAR(50) NOT NULL,
+    photos TEXT DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (landlordId) REFERENCES users(userId)
 );
@@ -43,4 +51,3 @@ CREATE TABLE reviews (
     FOREIGN KEY (propertyId) REFERENCES properties(propertyId),
     FOREIGN KEY (tenantId) REFERENCES users(userId)
 );
-

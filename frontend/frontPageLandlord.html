@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/styleFrontPageLandlord.css">
+    <title>Rental Platform</title>
+</head>
+
+<body>
+    <div class="container-admin">
+        <div class="header-row">
+            <img src="../resources/home.png" id="img1">
+            <h1>RENTIFLY</h1>
+        </div>
+        <div class="middle-row">
+            <img src="../resources/admin.png" id="img2">
+            <h2>ADMIN</h2>
+            <p>In case of emergency don't hesitate to call us!</p>
+            <p>0753 317 434 - Turcu Daniel</p>
+            <input type="button" value="Log Out" id="Logout">
+        </div>
+    </div>
+
+    <div class="container-landlord">
+
+        <!-- Top bar -->
+        <div class="landlord-topbar">
+            <h2 class="landlord-title">My Properties</h2>
+            <button class="btn-add-property" id="btn-create-post">+ Add New Property</button>
+        </div>
+
+        <!-- Error banner -->
+        <div id="error-banner"></div>
+
+        <!-- Empty state (shown when no properties) -->
+        <div id="empty-state">
+            <div class="empty-icon">🏠</div>
+            <h3>No posts created yet</h3>
+            <p>You haven't listed any properties. Add your first one!</p>
+            <button class="btn-add-property" id="btn-create-post-empty">+ Create a Post</button>
+        </div>
+
+        <!-- Properties grid (shown when properties exist) -->
+        <div id="properties-grid"></div>
+
+    </div>
+
+    <!-- Modal overlay -->
+    <div id="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modal-title">Add New Property</h3>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+
+            <form id="property-form">
+                <input type="hidden" id="property-id">
+
+                <div class="form-group">
+                    <label for="field-title">Title</label>
+                    <input type="text" id="field-title" placeholder="e.g. Modern Studio in City Center" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="field-description">Description</label>
+                    <textarea id="field-description" placeholder="Describe the property..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="field-location">Location</label>
+                    <input type="text" id="field-location" placeholder="e.g. Bucharest, Sector 1" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="field-rent">Rent ($/month)</label>
+                        <input type="number" id="field-rent" placeholder="e.g. 500" min="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="field-lease">Lease Term</label>
+                        <input type="text" id="field-lease" placeholder="e.g. 12 months" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="field-photo">Property Photo</label>
+                    <div id="photo-preview" class="photo-preview"></div>
+                    <input type="file" id="field-photo" accept="image/jpeg,image/png,image/webp">
+                    <small>JPG, PNG or WEBP — max 5MB</small>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn-save">Save Property</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="auth.js"></script>
+    <script src="landlordPosts.js"></script>
+    <script>
+        document.getElementById('btn-create-post-empty')
+            ?.addEventListener('click', openCreateModal);
+    </script>
+</body>
+
+</html>

@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="styles/styleFrontPageTenant.css">
     <title>Rental Platform</title>
 </head>
-<body>
+<body data-check-session="true">
     <div class="navigation-bar">
         <div class="logo">
             <img src="../resources/logoRentifly.png">
@@ -15,8 +15,13 @@
         <div class="nav-links">
             <input type="button" value="Browse" id="browse">
             <input type="button" value="Contact Us" id="contact">
-            <input type="button" value="Sign In" id="sign-in">
+            
     </div>
+
+    <div id="nav-account">
+        <input type="button" value="Sign In" id="sign-in">
+    </div>
+    
     </div>
     <div class="hero">
     <div class="hero-section">
@@ -33,16 +38,18 @@
         <input type="button" value="Search" class="search-button">
     </div>
 
-
-<script>
-    fetch('../backend/api.php?action=GetCounts')
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('properties-counter').textContent = data.properties;
-            document.getElementById('cities-counter').textContent = data.cities;
-        });
-
-</script>
+    <div id="PopupRegister">
+        <div class="popup-content">
+            <h2>Select Your Role</h2>
+            <p>Please choose how you intend to use our platform.</p>
+            
+            <div class="role-options">
+                <button id="btnTenant">I am a Tenant</button>
+                <button id="btnLandlord">I am a Landlord</button>
+            </div>
+        </div>
+    </div>
+    <script src="auth.js"></script>
 
 </body>
 </html>

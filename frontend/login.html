@@ -1,37 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles/styleAuth.css">
-    <title>Login</title>
-</head>
-<body class="auth-screen">
-    <div class="auth-banner">
-        <h2>Welcome!</h2>
-        <p>Is this your first time here? Sign-Up right now and enjoy the full experience!</p>
-    </div>
-    <div class="auth-form">
-    <div class="items"> 
-    <h1>Login:</h1>
-    <form id="Login">
-        <input type="text" placeholder="Username" name="username" id="entry" required>
-        <input type="password" id="password" placeholder="Password" name="password" required>
-        <label class="container-checkbox">Remember Me
-            <input type="checkbox">
-            <span class="checkmark"></span>
-          </label>
-          <div class="navigation-links">
-            <a href="register.html">Don't have an account? Register!</a>
-            <a href="frontPage.html">Back to Home</a>
-            <a href="accountRecovery.html">Forgot Password?</a>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="styles/styleAuth.css">
+        <title>Login</title>
+    </head>
+    <body class="auth-screen">
+        <div class="auth-banner">
+            <img src="../resources/auth.png" alt="NoText Auth">
+            
         </div>
-        <input type="submit" value="Login" id="button">
+        <div class="auth-form">
+        <div class="items"> 
+        <h1>Log in:</h1>
+        <form id="Login">
+            <input type="text" placeholder="Username" name="username" id="entry" required>
+            <input type="password" id="password" placeholder="Password" name="password" required>
+            <div class="Row-Remember">  
+            <label class="container-checkbox">Remember Me
+                <input type="checkbox">
+                <span class="checkmark"></span>
+            </label>
+            <div class="navigation-links">
+                <a href="accountRecovery.html">Forgot Password?</a>
+            </div>
+        </div>
+            <input type="submit" value="Log in" id="button">
 
-    </form>
+        </form>
 
-   
-</div>
-<script src="auth.js"></script>
-</body>
-</html>
+    
+    </div>
+    <script src="auth.js"></script>
+    </body>
+    </html>
