@@ -86,20 +86,11 @@ function applyUserFilters() {
     const typeSelect = document.getElementById('filter-type');
     const propertyTypeFilter = typeSelect ? typeSelect.value : 'any';
     
-    const searchTerm = document.getElementById('global-search').value.trim().toLowerCase();
 
     let filtered = window.loadedProperties || [];
 
     if (locationFilter) {
         filtered = filtered.filter(p => p.location && p.location.toLowerCase().includes(locationFilter));
-    }
-
-    if (searchTerm) {
-        filtered = filtered.filter(p => 
-            (p.title && p.title.toLowerCase().includes(searchTerm)) ||
-            (p.description && p.description.toLowerCase().includes(searchTerm)) ||
-            (p.location && p.location.toLowerCase().includes(searchTerm))
-        );
     }
 
     // FIX 2: Fixed property evaluation to look for p.type safely

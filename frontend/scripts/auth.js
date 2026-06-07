@@ -176,9 +176,19 @@ async function loadSessionState() {
         if (result.logged_in) {
             navAccount.innerHTML = `
                 <span class="nav-user">Hi, ${result.user.username}</span>
-                <input type="button" value="Log out" id="logout-link">
+                <div class="settings-dropdown-container">
+                    <input type="button" value="Settings ⚙️" id="btn-settings-trigger">
+                    <div id="settings-dropdown-menu" class="dropdown-popup-menu">
+                        <input type="button" value="📊 Go To Dashboard" id="btn-to-dashboard-menu">
+                        <hr class="dropdown-divider">
+                        <input type="button" value="Log out" id="logout-link">
+                    </div>
+                </div>
             `;
             bindLogoutButton();
+            document.getElementById('btn-to-dashboard-menu')?.addEventListener('click', () => {
+                document.getElementById('btn-to-dashboard')?.click();});
+            initSettingsDropdown();
 
             if (sessionStorage.getItem('PopupRegister') === 'true') {
                 Popup();
@@ -192,6 +202,24 @@ async function loadSessionState() {
         console.error('Session check failed:', error);
         bindSignInButton();
     }
+}
+
+function initSettingsDropdown() {
+    const triggerBtn = document.getElementById('btn-settings-trigger');
+    const dropdownMenu = document.getElementById('settings-dropdown-menu');
+
+    if (!triggerBtn || !dropdownMenu) return;
+
+    triggerBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdownMenu.classList.toggle('show-menu');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!dropdownMenu.contains(e.target) && e.target !== triggerBtn) {
+            dropdownMenu.classList.remove('show-menu');
+        }
+    });
 }
 
 if (document.body.dataset.checkSession === 'true') 
@@ -224,6 +252,8 @@ async function initLogoutButton(buttonId = 'Logout') {
         logoutBtn.onclick = () => window.location.href = '../auth/login.html';
     }
 }
+
+
 
 
 
