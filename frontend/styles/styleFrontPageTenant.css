@@ -66,7 +66,8 @@ body {
     align-items: center;
 }
 
-#contact {
+#contact,
+#btn-to-dashboard {
     background-color: white;
     border-radius: 15px;
     color: #5c0a28;
@@ -340,11 +341,24 @@ body {
     background-color: #ffffff;
     border: 4px solid #5c0a28;
     border-radius: 30px;
-    height: 240px;
+    height: 250px; 
     overflow: hidden;
     cursor: pointer;
-    position: relative;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-image-wrapper {
+    width: 100%;
+    height: 195px; 
+    background-size: cover; 
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    flex-grow: 1;
 }
 
 .card-overlay-bar {
@@ -613,3 +627,4 @@ body {
 .btn-submit-contact:hover {
     background-color: #7a1148;
 }
+
