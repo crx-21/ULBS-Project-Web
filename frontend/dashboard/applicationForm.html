@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for Property – Rentifly</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/styleApplicationForm.css">
+</head>
+<body>
+    <div class="form-wrapper">
+        <div class="form-card">
+            <h1>Apply for Property</h1>
+            <p id="form-property-title" class="property-label"></p>
+
+            <div id="error-banner"></div>
+            <div id="success-banner"></div>
+
+            <p class="form-note">
+                By clicking confirm you are submitting your application.
+                The landlord will review it and get back to you.
+            </p>
+
+            <div class="form-group">
+                <label for="field-app-title">Application Title</label>
+                <input type="text" id="field-app-title" placeholder="e.g. Looking for a long-term home" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="field-app-message">Why are you applying?</label>
+                <textarea id="field-app-message" placeholder="Tell the landlord a bit about yourself and why you're interested..." required></textarea>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn-cancel" onclick="window.history.back()">Cancel</button>
+                <button class="btn-confirm" id="btn-confirm">Confirm Application</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../scripts/auth.js"></script>
+    <script src="../scripts/applicationForm.js"></script>
+</body>
+</html>

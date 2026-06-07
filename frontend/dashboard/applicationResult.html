@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Application Result – Rentifly</title>
+    <link rel="stylesheet" href="../styles/styleApplicationResult.css">
+</head>
+<body>
+    <div class="card" id="result-card">
+        <div class="icon" id="result-icon"></div>
+        <h1 id="result-title"></h1>
+        <p id="result-message"></p>
+    </div>
+    <script>
+        const action = new URLSearchParams(window.location.search).get('action');
+        const card   = document.getElementById('result-card');
+        if (action === 'approved') {
+            card.classList.add('approved');
+            document.getElementById('result-icon').textContent    = '✅';
+            document.getElementById('result-title').textContent   = 'Application Approved';
+            document.getElementById('result-message').textContent = 'You have accepted this application. The tenant will be notified.';
+        } else {
+            card.classList.add('rejected');
+            document.getElementById('result-icon').textContent    = '❌';
+            document.getElementById('result-title').textContent   = 'Application Rejected';
+            document.getElementById('result-message').textContent = 'You have rejected this application.';
+        }
+    </script>
+</body>
+</html>

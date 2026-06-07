@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles/styleFrontPageTenant.css">
+    <link rel="stylesheet" href="../styles/styleFrontPageTenant.css">
     <title>Rental Platform</title>
 </head>
 <body data-check-session="true">
     <div class="navigation-bar">
         <div class="logo">
-            <img src="../resources/logoRentifly.png">
+            <img src="../../resources/logoRentifly.png">
             Rentifly
         </div>
         <div class="nav-links">
@@ -49,7 +49,7 @@
             </div>
         </div>
     </div>
-    <script src="auth.js"></script>
+    <script src="../scripts/auth.js"></script>
 
     <div class="properties-section">
         <h2 class="section-title">Available Properties</h2>
@@ -57,11 +57,27 @@
         <div id="no-properties-message">No available properties found.</div>
         <div class="mega-deals-section">
             <h2 class="section-title">Mega Deals</h2>
-            <div id="mega-deals-container" class="properties-container"></div>
-            <div id="no-mega-deals-message">No mega deals available at the moment.</div>
+            <div id="mega-properties-container" class="properties-container"></div>
+            <div id="no-mega-properties-message">No mega deals available at the moment.</div>
+        </div>
     </div>
+
+    <!-- Property Popup -->
+<div id="popup-overlay">
+    <div class="property-popup">
+        <button class="popup-close" onclick="closePopup()">✕</button>
+        <div id="popup-photo" class="popup-photo"></div>
+        <div class="popup-body">
+            <h2 id="popup-title"></h2>
+            <p id="popup-location" class="popup-meta"></p>
+            <p id="popup-rent" class="popup-meta popup-rent"></p>
+            <p id="popup-lease" class="popup-meta"></p>
+            <p id="popup-description" class="popup-description"></p>
+            <button id="popup-apply-btn" class="btn-apply">Apply</button>
+        </div>
     </div>
-     <script src="tenantViewProperties.js"></script>
+</div>
+     <script src="../scripts/tenantViewProperties.js"></script>
         
 
 </body>

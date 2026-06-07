@@ -27,9 +27,9 @@ CREATE TABLE properties (
     rent DECIMAL(10, 2) NOT NULL,
     lease_term VARCHAR(50) NOT NULL,
     photos TEXT DEFAULT NULL,
+    status ENUM('available', 'occupied') DEFAULT 'available',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (landlordId) REFERENCES users(userId),
-    status ENUM('available', 'occupied') DEFAULT 'available'
+    FOREIGN KEY (landlordId) REFERENCES users(userId)
 );
 
 CREATE TABLE applications (
@@ -37,6 +37,8 @@ CREATE TABLE applications (
     propertyId INT NOT NULL,
     tenantId INT NOT NULL,
     status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
+    title VARCHAR(255) DEFAULT NULL,
+    message TEXT DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (propertyId) REFERENCES properties(propertyId),
     FOREIGN KEY (tenantId) REFERENCES users(userId)
