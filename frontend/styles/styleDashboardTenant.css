@@ -8,46 +8,52 @@ body {
     font-family: 'Montserrat', sans-serif;
 }
 
+body {
+    display: flex;
+    flex-direction: column;
+}
+
 .container-admin {
-    width: 500px;
-    min-height: 100vh;
-    margin-left: 0;
-    margin-top: 0;
-    margin-right: auto;
+    width: 100%;
+    min-height: auto;
     background-color: #5c0a28;
     box-sizing: border-box;
-    overflow: visible;
+    padding: 20px;
     color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .header-row {
     display: flex;
     align-items: center;
     gap: 20px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+    width: 100%;
+    justify-content: center;
 }
-
 
 .container-admin h1 {
     text-align: left;
     margin: 0;
-    font-size: 50px;
+    font-size: clamp(1.8rem, 5vw, 3rem);
 }
 
 #img1 {
-    width: 100px;
-    height: 100px;
-    min-width: 100px;
+    width: 60px;
+    height: 60px;
+    min-width: 60px;
     border-radius: 50px;
-    margin-top: 20px;
-    margin-left: 30px;
+    margin-top: 0;
+    margin-left: 0;
 }
 
 #img2 {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .middle-row {
@@ -55,40 +61,95 @@ body {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    overflow: visible;
+    width: 100%;
 }
-
-
 
 .middle-row h2,
 .middle-row p {
-    margin-top: 30px;
-    font-size: 20px;
+    margin-top: 15px;
+    font-size: 16px;
 }
 
 #Logout {
-    margin-top: 50px;
-    padding: 8px 20px;
+    margin-top: 20px;
     cursor: pointer;
-    width: 50%;
-    padding: 10px;
+    width: 100%;
+    max-width: 200px;
+    padding: 12px;
     background: white;
     color: black;
     border: none;
     border-radius: 14px;
-    cursor: pointer;
     font-size: 16px;
+    font-weight: 600;
+    box-sizing: border-box;
 }
 
-body {
-    display: flex;
+#btn-home {
+    margin-top: 20px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 200px;
+    padding: 12px;
+    background: white;
+    color: black;
+    border: none;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    box-sizing: border-box;
 }
 
 .container-tenant {
     flex: 1;
-    padding: 40px;
+    padding: 20px;
     background-color: #f5f0f2;
-    min-height: 100vh;
-    overflow-y: auto;
+    box-sizing: border-box;
 }
 
+@media (min-width: 992px) {
+    body {
+        flex-direction: row;
+    }
+
+    .container-admin {
+        width: 320px;
+        min-width: 320px;
+        min-height: 100vh;
+        padding: 40px 20px;
+        position: sticky;
+        top: 0;
+        align-self: flex-start;
+    }
+
+    .header-row {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+        margin-bottom: 30px;
+    }
+
+    .container-admin h1 {
+        text-align: center;
+    }
+
+    #img1 {
+        width: 100px;
+        height: 100px;
+        min-width: 100px;
+    }
+
+    .middle-row h2,
+    .middle-row p {
+        margin-top: 20px;
+    }
+
+    #Logout {
+        margin-top: 50px;
+        width: 80%;
+    }
+
+    .container-tenant {
+        padding: 40px;
+    }
+}
