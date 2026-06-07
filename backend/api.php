@@ -130,7 +130,7 @@ switch ($request) {
 
     case 'GetCounts':
         echo json_encode([
-            'status'     => 'success',
+            'status'     => 'true',
             'properties' => $propertyModel->GetPropertyCounts(),
             'cities'     => $propertyModel->GetCityCount()
         ]);
@@ -197,6 +197,10 @@ switch ($request) {
         requireLandlord();
         handleApplicationFromInbox($conn, $inputData);
         exit;  
+
+    case 'submit_support_ticket':
+        handleSupportTicket($conn, $input);
+        break;   
 
     default:
         http_response_code(404);
@@ -743,4 +747,87 @@ function handleApplicationFromInbox($conn, array $input) {
     echo json_encode(['success' => true, 'message' => 'Application ' . $decision . ' successfully.']);
 }
 
+function handleSupportTicket($conn, array $input) {
+    // 1. Sanitize incoming payload strings
+    $name    = trim($input['name'] ?? '');
+    $email   = filter_var(trim($input['email'] ?? ''), FILTER_VALIDATE_EMAIL);
+    $phone   = trim($input['phone'] ?? '');
+    $message = trim($input['message'] ?? '');
+
+    // 2. Validate everything is filled out correctly
+    if (!$name || !$email || !$phone || !$message) {
+        echo json_encode(['success' => false, 'message' => 'All layout input fields are required with valid values.']);
+        return;
+    }
+
+    // 3. Load vendor dependencies exactly how your template does it
+    require_once __DIR__ . '/vendor/autoload.php';
+    require_once __DIR__ . '/config.php';
+
+    $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+
+    try {
+        // SMTP Server configuration mirroring your project credentials constants
+        $mail->isSMTP();
+        $mail->Host       = 'stoicasebastian1037@gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = MAIL_USERNAME;
+        $mail->Password   = MAIL_PASSWORD;
+        $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = 587;
+
+        // Set who the email is coming from and send it directly to your config username (your inbox)
+        $mail->setFrom(MAIL_USERNAME, 'Rentifly Support Monitor');
+        $mail->addAddress(MAIL_USERNAME, 'System Administrator'); 
+        
+        // This lets you click "Reply" in your email client to message the user directly back!
+        $mail->addReplyTo($email, $name);
+
+        // HTML Formatting inside email matching your platform aesthetic rules
+        $mail->isHTML(true);
+        $mail->Subject = "⚠️ New Support Ticket from: {$name}";
+        $mail->Body    = "
+            <div style='font-family: Montserrat, sans-serif; max-width: 600px; margin: auto;'>
+                <div style='background: #5c0a28; padding: 24px; border-radius: 12px 12px 0 0;'>
+                    <h1 style='color: white; margin: 0; font-size: 1.4rem;'>New Help Desk Ticket</h1>
+                </div>
+                <div style='background: #fff; padding: 28px; border: 1px solid #e8d8de; border-radius: 0 0 12px 12px;'>
+                    <p style='color: #333; font-size: 1.1rem;'>A user has reported a platform problem or inquiry.</p>
+
+                    <h3 style='color: #5c0a28; border-bottom: 2px solid #5c0a28; padding-bottom: 6px; margin-top: 24px;'>User Details</h3>
+                    <table style='width: 100%; border-collapse: collapse; margin-bottom: 20px;'>
+                        <tr>
+                            <td style='padding: 8px 0; color: #666; font-weight: bold; width: 120px;'>Name:</td>
+                            <td style='padding: 8px 0; color: #333;'>{$name}</td>
+                        </tr>
+                        <tr>
+                            <td style='padding: 8px 0; color: #666; font-weight: bold;'>Email Address:</td>
+                            <td style='padding: 8px 0; color: #333;'><a href='mailto:{$email}'>{$email}</a></td>
+                        </tr>
+                        <tr>
+                            <td style='padding: 8px 0; color: #666; font-weight: bold;'>Phone Number:</td>
+                            <td style='padding: 8px 0; color: #333;'><a href='tel:{$phone}'>{$phone}</a></td>
+                        </tr>
+                    </table>
+
+                    <h3 style='color: #5c0a28; border-bottom: 2px solid #5c0a28; padding-bottom: 6px;'>Message Details</h3>
+                    <div style='background: #f5f0f2; border-left: 4px solid #5c0a28; border-radius: 4px; padding: 16px; margin: 15px 0; color: #444; line-height: 1.6; white-space: pre-wrap;'>
+                        {$message}
+                    </div>
+
+                    <p style='color: #aaa; font-size: 0.8rem; margin-top: 30px; text-align: center; border-top: 1px dashed #ddd; padding-top: 15px;'>
+                        This email was securely compiled and transmitted via your centralized Rentifly API infrastructure contact controller application layer.
+                    </p>
+                </div>
+            </div>
+        ";
+
+        $mail->send();
+        echo json_encode(['success' => true, 'message' => 'Message transmitted successfully.']);
+
+    } catch (Exception $e) {
+        error_log('Support Mailer Encountered Error: ' . $mail->ErrorInfo);
+        echo json_encode(['success' => false, 'message' => 'Mailer processing pipeline failed internally.']);
+    }
+}
 ?>

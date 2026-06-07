@@ -43,14 +43,3 @@ CREATE TABLE applications (
     FOREIGN KEY (propertyId) REFERENCES properties(propertyId),
     FOREIGN KEY (tenantId) REFERENCES users(userId)
 );
-
-CREATE TABLE reviews (
-    reviewId INT AUTO_INCREMENT PRIMARY KEY,
-    propertyId INT NOT NULL,
-    tenantId INT NOT NULL,
-    rating INT CHECK (rating >= 1 AND rating <= 5),
-    comment TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (propertyId) REFERENCES properties(propertyId),
-    FOREIGN KEY (tenantId) REFERENCES users(userId)
-);
