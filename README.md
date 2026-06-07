@@ -91,25 +91,25 @@ BA:
   Criterii de Acceptanță:
 
 - [ ]1. Zona de Sumar (Global KPI Cards)
-- [ ]Sus, în dashboard, trebuie să existe carduri care să calculeze și să afișeze automat totalurile generale (pe luna în curs sau pe anul curent, în funcție de un filtru global de dată):
-- [ ]Venit Brut Total: Suma tuturor facturilor cu statusul Plătit.
-- [ ]Total Taxe și Impozite: Un calcul automat aplicat la Venitul Brut (ex: dacă se aplică un impozit pe venit de 10%, sistemul va afișa valoarea reținută sau care trebuie plătită la stat). Atenție Devs: Procentajul de taxare trebuie să fie configurabil, nu hardcodat.
-- [ ]Venit Net: Venit Brut minus Total Taxe.
-- [ ]Total de Încasat (Restanțe): Suma cumulată a tuturor facturilor cu status În așteptare și Restanță de la toate apartamentele.
+- [ ] Sus, în dashboard, trebuie să existe carduri care să calculeze și să afișeze automat totalurile generale (pe luna în curs sau pe anul curent, în funcție de un filtru global de dată):
+- [ ] Venit Brut Total: Suma tuturor facturilor cu statusul Plătit.
+- [ ] Total Taxe și Impozite: Un calcul automat aplicat la Venitul Brut (ex: dacă se aplică un impozit pe venit de 10%, sistemul va afișa valoarea reținută sau care trebuie plătită la stat). Atenție Devs: Procentajul de taxare trebuie să fie configurabil, nu hardcodat.
+- [ ] Venit Net: Venit Brut minus Total Taxe.
+- [ ] Total de Încasat (Restanțe): Suma cumulată a tuturor facturilor cu status În așteptare și Restanță de la toate apartamentele.
 
 2. Modulul de Raportare Vizuală (Grafice)
-- [ ]Secțiunea de mijloc a ecranului va conține diagrame pentru a vizualiza evoluția și starea afacerii:
-- [ ]Graficul Veniturilor (Bar Chart sau Line Chart): O diagramă care afișează evoluția veniturilor încasate pe axa timpului (ex: Lunile anului pe axa X, Sumele în EUR/RON pe axa Y).
-- [ ]Graficul Statusului Plăților (Pie Chart / Doughnut): O diagramă circulară care arată ponderea facturilor: % Plătite, % Neplătite, % Întârziate.
+- [ ] Secțiunea de mijloc a ecranului va conține diagrame pentru a vizualiza evoluția și starea afacerii:
+- [ ] Graficul Veniturilor (Bar Chart sau Line Chart): O diagramă care afișează evoluția veniturilor încasate pe axa timpului (ex: Lunile anului pe axa X, Sumele în EUR/RON pe axa Y).
+- [ ] Graficul Statusului Plăților (Pie Chart / Doughnut): O diagramă circulară care arată ponderea facturilor: % Plătite, % Neplătite, % Întârziate.
 
 3. Tabelul Centralizat de Facturi (Toate Apartamentele)
 În partea de jos a ecranului, va exista un tabel master cu absolut toate facturile emise de proprietar.
-- [ ]Coloane obligatorii: ID Factură, Apartament (cu link către pagina apartamentului), Nume Chiriaș, Dată Emitere, Scadență, Sumă, Taxă calculată, Status.
-- [ ]Filtre Globale pentru tabel:
-- [ ]Filtru de selecție a unei perioade (Date Picker: De la... Până la...).
-- [ ]Dropdown cu selecția apartamentului (arată-mi doar facturile pentru "Apartament X").
-- [ ]Filtru după Status (arată-mi doar restanțele).
-- [ ]Export Date: Buton de "Export to CSV/Excel" pentru lista de facturi curentă din tabel (foarte util pentru contabilitate).
+- [ ] Coloane obligatorii: ID Factură, Apartament (cu link către pagina apartamentului), Nume Chiriaș, Dată Emitere, Scadență, Sumă, Taxă calculată, Status.
+- [ ] Filtre Globale pentru tabel:
+- [ ] Filtru de selecție a unei perioade (Date Picker: De la... Până la...).
+- [ ] Dropdown cu selecția apartamentului (arată-mi doar facturile pentru "Apartament X").
+- [ ] Filtru după Status (arată-mi doar restanțele).
+- [ ] Export Date: Buton de "Export to CSV/Excel" pentru lista de facturi curentă din tabel (foarte util pentru contabilitate).
   
 - [ ] Agentul/proprietarul sa primeasca mail de fiecare data cand se face o plata (notificare)
 - [ ] User-ul (cumparatorul) trebuie, in momentul cand se inregistreaza si vrea sa cumpere/inchirieze un apartament, sa aiba posibilitatea sa isi bage buletinul ca sa se poata sa se faca platile/facturile facute automat
