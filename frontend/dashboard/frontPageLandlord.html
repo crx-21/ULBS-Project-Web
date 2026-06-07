@@ -123,6 +123,23 @@
         </div>
     </div>
 
+    <!-- Bills Modal -->
+    <div id="bills-modal-overlay" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000;">
+        <div class="modal" style="background: white; padding: 0; border-radius: 12px; overflow: hidden; width: 400px;">
+            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; padding: 20px; background: #f8f8f8; border-bottom: 1px solid #eee;">
+                <h3 style="margin: 0;">Utility Bills Detail</h3>
+                <button class="modal-close" onclick="closeBillsModal()" style="cursor: pointer; border: none; background: none; font-size: 1.2rem;">✕</button>
+            </div>
+            <div id="bills-content" style="padding: 20px;">
+                <!-- Bills will be injected here -->
+            </div>
+            <div class="modal-footer" style="padding: 20px; border-top: 1px solid #eee; display: flex; justify-content: flex-end; gap: 10px;">
+                <button class="btn-cancel" onclick="closeBillsModal()">Close</button>
+                <button id="btn-pay-bills" class="btn-save" style="background: #2dc653;">Pay Now</button>
+            </div>
+        </div>
+    </div>
+
     <script src="../scripts/auth.js"></script>
     <script src="../scripts/landlordPosts.js"></script>
     <script>

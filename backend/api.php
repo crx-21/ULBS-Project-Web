@@ -220,7 +220,7 @@ function getProperties($conn) {
     $landlordId = $_SESSION['user_id'];
 
     $stmt = $conn->prepare("
-        SELECT propertyId, title, description, location, rent, lease_term, photos, created_at
+        SELECT propertyId, title, description, location, rent, lease_term, photos, created_at, status
         FROM properties
         WHERE landlordId = :landlordId
         ORDER BY created_at DESC
@@ -453,7 +453,7 @@ function getTenantApplication($conn) {
 
     $stmt = $conn->prepare("
         SELECT a.applicationId, a.propertyId, a.status, a.created_at,
-               p.title, p.location, p.rent
+               p.title, p.location, p.rent, p.photos
         FROM applications a
         JOIN properties p ON p.propertyId = a.propertyId
         WHERE a.tenantId = :tenantId

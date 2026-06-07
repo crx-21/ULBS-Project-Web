@@ -191,7 +191,7 @@ async function initLogoutButton(buttonId = 'Logout') {
             logoutBtn.onclick = async () => {
                 await apiPost({ action: 'Logout' });
                 sessionStorage.clear();
-                window.location.href = '..1/auth/login.html';
+                window.location.href = '../auth/login.html';
             };
         }
 
