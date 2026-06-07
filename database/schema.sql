@@ -28,7 +28,8 @@ CREATE TABLE properties (
     lease_term VARCHAR(50) NOT NULL,
     photos TEXT DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (landlordId) REFERENCES users(userId)
+    FOREIGN KEY (landlordId) REFERENCES users(userId),
+    status ENUM('available', 'occupied') DEFAULT 'available'
 );
 
 CREATE TABLE applications (

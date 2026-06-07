@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 $userModel = new User($conn);
 $inputData = json_decode(file_get_contents("php://input"), true);
 $request = $inputData['action'] ?? $_REQUEST['action'] ?? '';
+$propertyModel = new Property($conn);
 
 switch ($request) {
 
@@ -163,6 +164,10 @@ switch ($request) {
     case 'upload_property_photo':
         requireLandlord();
         uploadPropertyPhoto($conn);
+        exit;
+
+    case 'get_available_properties':
+        getAvailableProperties($conn);
         exit;
 
     default:
@@ -386,6 +391,20 @@ function uploadPropertyPhoto($conn) {
         'filename' => $filename,
         'url'      => '/ULBS-Project-Web/uploads/properties/' . $filename
     ]);
+}
+
+//Partea 1
+function getAvailableProperties($conn) {
+    $stmt = $conn->prepare("
+        SELECT propertyId, title, description, location, rent, lease_term, photos, created_at
+        FROM properties
+        WHERE status = 'available'
+        ORDER BY created_at DESC
+    ");
+    $stmt->execute();
+    $properties = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    echo json_encode(['success' => true, 'properties' => $properties]);
 }
 
 ?>
