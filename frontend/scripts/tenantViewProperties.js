@@ -9,12 +9,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function loadAvailableProperties() {
-    const regularGrid        = document.getElementById('properties-container');
+    const regularGrid = document.getElementById('properties-container');
 
     if (!regularGrid) return;
 
     try {
-        // Check if tenant already has an application
         const appCheck = await apiPost({ action: 'get_tenant_application' });
         const hasApplied = appCheck.has_applied;
 
@@ -26,8 +25,14 @@ async function loadAvailableProperties() {
 
         window.loadedProperties = response.properties;
         window.hasUserApplied = hasApplied;
+        
         renderProperties(window.loadedProperties, window.hasUserApplied);
-        document.getElementById('btn-apply-filters').onclick = applyUserFilters;
+        
+        // Connect button filter trigger click to function
+        const applyBtn = document.getElementById('btn-apply-filters');
+        if (applyBtn) {
+            applyBtn.onclick = applyUserFilters;
+        }
 
     } catch (error) {
         console.error('Error fetching available properties:', error);
@@ -38,15 +43,12 @@ async function loadCounterStatistics() {
     const propCounter = document.getElementById('properties-counter');
     const cityCounter = document.getElementById('cities-counter');
 
-
     if (!propCounter || !cityCounter) return;
 
     try {
-        // Query your existing API wrapper infrastructure
         const response = await apiPost({ action: 'GetCounts' });
 
         if (response.success) {
-            // Write the actual database statistics results into the DOM elements
             propCounter.textContent = response.properties ?? 0;
             cityCounter.textContent = response.cities ?? 0;
         } else {
@@ -60,6 +62,7 @@ async function loadCounterStatistics() {
 function renderProperties(properties, hasApplied) {
     const regularGrid = document.getElementById('properties-container');
     const emptyMessage = document.getElementById('no-properties-message');
+    
     if (properties.length === 0) {
         if (emptyMessage) emptyMessage.style.display = 'block';
         regularGrid.style.display = 'none';
@@ -75,28 +78,33 @@ function renderProperties(properties, hasApplied) {
 }
 
 function applyUserFilters() {
-    const locactionFilter = document.getElementById('filter-location').value.trim().toLowerCase();
+    const locationFilter = document.getElementById('filter-location').value.trim().toLowerCase();
     const minRentFilter  = parseFloat(document.getElementById('filter-min-rent').value);
     const maxRentFilter  = parseFloat(document.getElementById('filter-max-rent').value);
-    const propertyTypeFilter = document.getElementById('filter-property-type').value;
+    
+    // FIX 1: Fixed ID name from 'filter-property-type' to 'filter-type'
+    const typeSelect = document.getElementById('filter-type');
+    const propertyTypeFilter = typeSelect ? typeSelect.value : 'any';
+    
     const searchTerm = document.getElementById('global-search').value.trim().toLowerCase();
 
     let filtered = window.loadedProperties || [];
 
-    if (locactionFilter) {
-        filtered = filtered.filter(p => p.location.toLowerCase().includes(locactionFilter));
+    if (locationFilter) {
+        filtered = filtered.filter(p => p.location && p.location.toLowerCase().includes(locationFilter));
     }
 
-    if(searchTerm) {
+    if (searchTerm) {
         filtered = filtered.filter(p => 
-            p.title.toLowerCase().includes(searchTerm) ||
-            p.description.toLowerCase().includes(searchTerm) ||
-            p.location.toLowerCase().includes(searchTerm)
+            (p.title && p.title.toLowerCase().includes(searchTerm)) ||
+            (p.description && p.description.toLowerCase().includes(searchTerm)) ||
+            (p.location && p.location.toLowerCase().includes(searchTerm))
         );
     }
 
-    if(propertyTypeFilter && propertyTypeFilter !== 'any') {
-        filtered = filtered.filter(p => p.property_type === propertyTypeFilter);
+    // FIX 2: Fixed property evaluation to look for p.type safely
+    if (propertyTypeFilter && propertyTypeFilter !== 'any') {
+        filtered = filtered.filter(p => p.type === propertyTypeFilter || p.property_type === propertyTypeFilter);
     }
 
     filtered = filtered.filter(p => {
@@ -107,14 +115,15 @@ function applyUserFilters() {
     });
 
     renderProperties(filtered, window.hasUserApplied);
-
 }
 
 function createPropertyCard(property, hasApplied) {
     const card = document.createElement('div');
     card.className = 'property-card';
+    
+    // FIX 3: Adjusted photo directory targets to drop the tricky initial forward slash
     const photoUrl = property.photos
-        ? `/ULBS-Project-Web/uploads/properties/${property.photos}`
+        ? `../../uploads/properties/${property.photos}`
         : '../../resources/placeholder-property.jpg';
 
     card.innerHTML = `
@@ -132,7 +141,7 @@ function createPropertyCard(property, hasApplied) {
 
 function openPropertyPopup(property, hasApplied) {
     const photoUrl = property.photos
-        ? `/ULBS-Project-Web/uploads/properties/${property.photos}`
+        ? `../../uploads/properties/${property.photos}`
         : '../../resources/placeholder-property.jpg';
 
     document.getElementById('popup-photo').style.backgroundImage = `url('${photoUrl}')`;
@@ -152,7 +161,6 @@ function openPropertyPopup(property, hasApplied) {
         applyBtn.disabled     = false;
         applyBtn.classList.remove('btn-disabled');
         applyBtn.onclick = () => {
-            // Store propertyId and redirect to application form
             sessionStorage.setItem('apply_propertyId', property.propertyId);
             sessionStorage.setItem('apply_propertyTitle', property.title);
             window.location.href = '../dashboard/applicationForm.html';
@@ -168,20 +176,16 @@ function contactRequest(){
     const closeContactBtn = document.getElementById('btnCloseContact');
     const contactForm = document.getElementById('contactForm');
 
-    // Show popup
     contactBtn?.addEventListener('click', () => {
         if (contactPopup) contactPopup.style.display = 'flex';
     });
 
-    // Hide popup on click '✕'
     closeContactBtn?.addEventListener('click', closeContactPopup);
 
-    // Hide popup when clicking outside the panel content
     contactPopup?.addEventListener('click', (e) => {
         if (e.target === contactPopup) closeContactPopup();
     });
 
-    // Handle form submit via AJAX Fetch
     contactForm?.addEventListener('submit', async (e) => {
         e.preventDefault();
         const submitBtn = document.getElementById('btnSubmitContact');
@@ -199,7 +203,7 @@ function contactRequest(){
         };
 
         try {
-            const response = await apiPost(dataPayload); // Uses your project's existing apiPost helper
+            const response = await apiPost(dataPayload);
             if (response.success) {
                 alert('Your inquiry was sent successfully!');
                 contactForm.reset();
@@ -229,8 +233,6 @@ function closeContactPopup() {
         contactPopup.style.display = 'none';
     }
 }
-
-
 
 function escapeHtml(text) {
     const div = document.createElement('div');

@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const preview = document.getElementById('photo-preview');
         const file = e.target.files[0];
         if (!file) { preview.innerHTML = ''; return; }
-    
+
         const reader = new FileReader();
         reader.onload = (ev) => {
             preview.innerHTML = `<img src="${ev.target.result}" alt="Preview">`;
@@ -62,8 +62,24 @@ async function loadProperties() {
     }
 }
 
-    
+// Deterministic bill generation based on propertyId for consistency between landlord and tenant
+function generateConsistentBills(propertyId) {
+    let seed = propertyId;
+    const random = () => {
+        seed = (seed * 16807) % 2147483647;
+        return (seed - 1) / 2147483646;
+    };
 
+    const bills = {
+        water: (random() * 40 + 20).toFixed(2),
+        electricity: (random() * 80 + 40).toFixed(2),
+        internet: (random() * 30 + 20).toFixed(2),
+        heating: (random() * 60 + 30).toFixed(2),
+    };
+    const total = Object.values(bills).reduce((acc, val) => acc + parseFloat(val), 0).toFixed(2);
+
+    return { ...bills, total };
+}
 
 function buildCard(property) {
     const card = document.createElement('div');
@@ -72,34 +88,113 @@ function buildCard(property) {
         ? `<img class="card-photo" src="/ULBS-Project-Web/uploads/properties/${property.photos}" alt="Property photo">`
         : `<div class="card-photo-placeholder">🏠</div>`;
 
+    const isOccupied = property.status === 'occupied';
+    const rentValue = parseFloat(property.rent) || 0;
+
+    let utilityBillsHtml = '';
+    let profitHtml = '';
+    let actionButtonsHtml = `
+        <button class="btn-edit" onclick="openEditModal(${property.propertyId})">Edit</button>
+        <button class="btn-delete" onclick="deleteProperty(${property.propertyId})">Delete</button>
+    `;
+
+    if (isOccupied) {
+        const bills = generateConsistentBills(property.propertyId);
+        const totalBills = parseFloat(bills.total);
+        const profit = rentValue - totalBills;
+
+        utilityBillsHtml = `
+            <div class="meta-item utilities">
+                <span class="meta-label">Utility Bills</span>
+                <span class="meta-value">$${totalBills.toFixed(2)}</span>
+            </div>
+        `;
+
+        profitHtml = `
+            <div class="card-profit" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #eee; font-weight: bold; color: #5c0a28;">
+                <span class="profit-label">Monthly Profit: </span>
+                <span class="profit-value">$${profit.toFixed(2)}</span>
+            </div>
+        `;
+
+        actionButtonsHtml = `
+            <button class="btn-view-bills" onclick="openBillsModal(${property.propertyId})" style="background: #5c0a28; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">View Bills</button>
+            <button class="btn-edit" onclick="openEditModal(${property.propertyId})">Edit</button>
+            <button class="btn-delete" onclick="deleteProperty(${property.propertyId})">Delete</button>
+        `;
+    }
+
     card.innerHTML = `
         ${photoHtml}
         <div class="card-header">
             <h3 class="card-title">${escapeHtml(property.title)}</h3>
             <span class="card-location">📍 ${escapeHtml(property.location)}</span>
+            ${isOccupied ? '<span class="card-status status-occupied" style="background: #2dc653; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; margin-left: 10px;">Occupied</span>' : ''}
         </div>
         <div class="card-body">
             <p class="card-description">${escapeHtml(property.description || 'No description provided.')}</p>
             <div class="card-meta">
                 <div class="meta-item rent">
                     <span class="meta-label">Rent</span>
-                    <span class="meta-value">$${parseFloat(property.rent).toFixed(2)}</span>
+                    <span class="meta-value">$${rentValue.toFixed(2)}</span>
                 </div>
                 <div class="meta-item lease">
                     <span class="meta-label">Lease Term</span>
                     <span class="meta-value">${escapeHtml(property.lease_term)}</span>
                 </div>
+                ${utilityBillsHtml}
             </div>
         </div>
         <div class="card-footer">
             <span class="card-date">Posted: ${formatDate(property.created_at)}</span>
+            ${profitHtml}
             <div class="card-actions">
-                <button class="btn-edit" onclick="openEditModal(${property.propertyId})">Edit</button>
-                <button class="btn-delete" onclick="deleteProperty(${property.propertyId})">Delete</button>
+                ${actionButtonsHtml}
             </div>
         </div>
     `;
     return card;
+}
+
+function openBillsModal(propertyId) {
+    const bills = generateConsistentBills(propertyId);
+    const content = document.getElementById('bills-content');
+
+    content.innerHTML = `
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #ccc;">
+                <span>💧 Water Bill</span>
+                <strong>$${bills.water}</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #ccc;">
+                <span>⚡ Electricity Bill</span>
+                <strong>$${bills.electricity}</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #ccc;">
+                <span>🌐 Internet Bill</span>
+                <strong>$${bills.internet}</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #ccc;">
+                <span>🔥 Heating Bill</span>
+                <strong>$${bills.heating}</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 8px 0; font-weight: bold; font-size: 1.1rem; color: #5c0a28;">
+                <span>Total Amount</span>
+                <span>$${bills.total}</span>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('btn-pay-bills').onclick = () => {
+        alert(`Payment of $${bills.total} processed successfully!`);
+        closeBillsModal();
+    };
+
+    document.getElementById('bills-modal-overlay').style.display = 'flex';
+}
+
+function closeBillsModal() {
+    document.getElementById('bills-modal-overlay').style.display = 'none';
 }
 
 // ─── Create / Edit Modal ──────────────────────────────────────────────────────
@@ -204,6 +299,7 @@ async function uploadPhoto(propertyId) {
         showError('Photo upload failed: ' + err.message);
     }
 }
+
 // ─── Delete ───────────────────────────────────────────────────────────────────
 
 async function deleteProperty(propertyId) {

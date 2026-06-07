@@ -142,6 +142,27 @@ function bindLogoutButton() {
     });
 }
 
+function bindDashboardButton() {
+    document.getElementById('btn-to-dashboard')?.addEventListener('click', async () => {
+        try {
+            const result = await apiPost({ action: 'Session' });
+            if (result.logged_in) {
+                if (result.user.role === 'landlord') {
+                    window.location.href = '../dashboard/frontPageLandlord.html';
+                } else {
+                    window.location.href = '../dashboard/dashboardTenant.html';
+                }
+            } else {
+                alert('Please sign in first to access the dashboard.');
+                window.location.href = '../auth/login.html';
+            }
+        } catch (error) {
+            console.error('Error checking session for dashboard redirect:', error);
+            alert('An error occurred. Please try again.');
+        }
+    });
+}
+
 async function loadSessionState() {
     const navAccount = document.getElementById('nav-account');
     if (!navAccount) {
@@ -150,6 +171,8 @@ async function loadSessionState() {
 
     try {
         const result = await apiPost({ action: 'Session' });
+        bindDashboardButton();
+
         if (result.logged_in) {
             navAccount.innerHTML = `
                 <span class="nav-user">Hi, ${result.user.username}</span>
@@ -191,7 +214,7 @@ async function initLogoutButton(buttonId = 'Logout') {
             logoutBtn.onclick = async () => {
                 await apiPost({ action: 'Logout' });
                 sessionStorage.clear();
-                window.location.href = '..1/auth/login.html';
+                window.location.href = '../auth/login.html';
             };
         }
 

@@ -6,6 +6,8 @@ error_reporting(E_ALL);
 require_once 'database.php';
 require_once 'models.php';
 require_once 'auth_session.php';
+require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/config.php';
 
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
@@ -130,7 +132,7 @@ switch ($request) {
 
     case 'GetCounts':
         echo json_encode([
-            'status'     => 'true',
+            'success'    => true,
             'properties' => $propertyModel->GetPropertyCounts(),
             'cities'     => $propertyModel->GetCityCount()
         ]);
@@ -199,8 +201,8 @@ switch ($request) {
         exit;  
 
     case 'submit_support_ticket':
-        handleSupportTicket($conn, $input);
-        break;   
+        handleSupportTicket($conn, $inputData);
+        exit;   
 
     default:
         http_response_code(404);
@@ -224,7 +226,7 @@ function getProperties($conn) {
     $landlordId = $_SESSION['user_id'];
 
     $stmt = $conn->prepare("
-        SELECT propertyId, title, description, location, rent, lease_term, photos, created_at
+        SELECT propertyId, title, description, location, rent, lease_term, photos, created_at, status
         FROM properties
         WHERE landlordId = :landlordId
         ORDER BY created_at DESC
@@ -457,7 +459,7 @@ function getTenantApplication($conn) {
 
     $stmt = $conn->prepare("
         SELECT a.applicationId, a.propertyId, a.status, a.created_at,
-               p.title, p.location, p.rent
+               p.title, p.location, p.rent, p.photos
         FROM applications a
         JOIN properties p ON p.propertyId = a.propertyId
         WHERE a.tenantId = :tenantId
@@ -549,9 +551,6 @@ function applyForProperty($conn, array $input) {
 }
 
 function sendApplicationEmail($conn, $landlordEmail, $landlordName, $tenantName, $propertyTitle, $location, $appTitle, $appMessage, $applicationId) {
-    require_once __DIR__ . '/vendor/autoload.php';
-    require_once __DIR__ . '/config.php';
-
     // Generate secure token
     $token = bin2hex(random_bytes(32));
     $stmt  = $conn->prepare("UPDATE applications SET action_token = :token WHERE applicationId = :id");
@@ -760,16 +759,12 @@ function handleSupportTicket($conn, array $input) {
         return;
     }
 
-    // 3. Load vendor dependencies exactly how your template does it
-    require_once __DIR__ . '/vendor/autoload.php';
-    require_once __DIR__ . '/config.php';
-
     $mail = new PHPMailer\PHPMailer\PHPMailer(true);
 
     try {
         // SMTP Server configuration mirroring your project credentials constants
         $mail->isSMTP();
-        $mail->Host       = 'stoicasebastian1037@gmail.com';
+        $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
         $mail->Username   = MAIL_USERNAME;
         $mail->Password   = MAIL_PASSWORD;
@@ -778,7 +773,7 @@ function handleSupportTicket($conn, array $input) {
 
         // Set who the email is coming from and send it directly to your config username (your inbox)
         $mail->setFrom(MAIL_USERNAME, 'Rentifly Support Monitor');
-        $mail->addAddress(MAIL_USERNAME, 'System Administrator'); 
+        $mail->addAddress('stoicasebastian1037@gmail.com', 'System Administrator'); 
         
         // This lets you click "Reply" in your email client to message the user directly back!
         $mail->addReplyTo($email, $name);
@@ -827,7 +822,7 @@ function handleSupportTicket($conn, array $input) {
 
     } catch (Exception $e) {
         error_log('Support Mailer Encountered Error: ' . $mail->ErrorInfo);
-        echo json_encode(['success' => false, 'message' => 'Mailer processing pipeline failed internally.']);
+        echo json_encode(['success' => false, 'message' => 'Mailer error: ' . $mail->ErrorInfo]);
     }
 }
 ?>
