@@ -1,0 +1,37 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="../styles/styleAuth.css">
+        <title>Login</title>
+    </head>
+    <body class="auth-screen">
+        <div class="auth-banner">
+            <img src="../../resources/auth.png" alt="NoText Auth">
+            
+        </div>
+        <div class="auth-form">
+        <div class="items"> 
+        <h1>Log in:</h1>
+        <form id="Login">
+            <input type="text" placeholder="Username" name="username" id="entry" required>
+            <input type="password" id="password" placeholder="Password" name="password" required>
+            <div class="Row-Remember">  
+            <label class="container-checkbox">Remember Me
+                <input type="checkbox">
+                <span class="checkmark"></span>
+            </label>
+            <div class="navigation-links">
+                <a href="accountRecovery.html">Forgot Password?</a>
+            </div>
+        </div>
+            <input type="submit" value="Log in" id="button">
+
+        </form>
+
+    
+    </div>
+    <script src="../scripts/auth.js"></script>
+    </body>
+    </html>

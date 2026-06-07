@@ -1,0 +1,45 @@
+CREATE DATABASE rental_platform;
+USE rental_platform;
+
+
+CREATE TABLE users (
+    userId INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    role ENUM('tenant', 'landlord', 'admin') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE password_resets (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    code VARCHAR(6) NOT NULL,
+    expires_at DATETIME NOT NULL
+);
+
+CREATE TABLE properties (
+    propertyId INT AUTO_INCREMENT PRIMARY KEY,
+    landlordId INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    location VARCHAR(255) NOT NULL,
+    rent DECIMAL(10, 2) NOT NULL,
+    lease_term VARCHAR(50) NOT NULL,
+    photos TEXT DEFAULT NULL,
+    status ENUM('available', 'occupied') DEFAULT 'available',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (landlordId) REFERENCES users(userId)
+);
+
+CREATE TABLE applications (
+    applicationId INT AUTO_INCREMENT PRIMARY KEY,
+    propertyId INT NOT NULL,
+    tenantId INT NOT NULL,
+    status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
+    title VARCHAR(255) DEFAULT NULL,
+    message TEXT DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (propertyId) REFERENCES properties(propertyId),
+    FOREIGN KEY (tenantId) REFERENCES users(userId)
+);

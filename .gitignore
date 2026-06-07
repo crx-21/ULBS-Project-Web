@@ -1,0 +1,5 @@
+backend/config.php
+backend/composer.json
+backend/composer.lock
+backend/vendor
+uploads

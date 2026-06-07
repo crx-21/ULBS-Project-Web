@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/styleDashboardTenant.css">
+    <title>Rental Platform</title>
+</head>
+
+<body>
+    <div class="container-admin">
+        <div class="header-row">
+            <img src="../../resources/home.png" id="img1">
+            <h1>RENTIFLY</h1>
+        </div>
+
+        <div class="middle-row">
+            <img src="../../resources/admin.png" id="img2">
+            <h2>ADMIN</h2>
+            <p>In case of emergency don't hesitate to call us!</p>
+            <p>0753 317 434 - Turcu Daniel</p>
+            <input type="button" value="Home" id="btn-home" onclick="window.location.href='../dashboard/frontPageTenant.html'">
+            <input type="button" value="Log Out" id="Logout">
+        </div>
+    </div>
+
+    <div class="container-tenant">
+        <!-- Property area -->
+        <div id="container-tenant-content">
+            <!-- Property details and bills will be injected here -->
+        </div>
+    </div>
+
+    <script src="../scripts/auth.js"></script>
+    <script src="../scripts/tenantDashboard.js"></script>
+    <script>
+        document.getElementById('Logout')?.addEventListener('click', async () => {
+            const data = await apiPost({ action: 'Logout' });
+            if (data.success) {
+                window.location.href = '../auth/login.html';
+            }
+        });
+    </script>
+</body>
+
+</html>

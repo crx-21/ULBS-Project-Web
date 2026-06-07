@@ -1,4 +1,4 @@
-front: HTML + CSS + JS + React 
+front: HTML + CSS + JS 
 back: PHP
 database: MySQL
 

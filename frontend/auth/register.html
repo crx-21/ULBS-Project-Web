@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/styleAuth.css">
+    <title>Register</title>
+</head>
+
+<body class="auth-screen">
+
+    <div class="auth-banner">
+        <img src="../../resources/auth.png" alt="NoText Auth">
+        
+    </div>
+    <div class="auth-form">
+        <div class="items">
+            <h1>Sign Up:</h1>
+            <form id="Register">
+                
+                <input type="email" placeholder="Email" id="entry" name="email" required>
+                <input type="text" placeholder="Username" id="entry" name="username" required>
+                <input type="password" placeholder="Password" id="password" name="password" required>
+                <input type="hidden" name="role" value="tenant">
+                <div class="navigation-links">
+                    <a href="login.html">Already have an account? Sign In</a>
+                </div>
+                <input type="submit" name="action" value="Register" id="button">    
+            </form>  
+        </div>
+    </div>
+    <script src="../scripts/auth.js"></script>
+</body>
+
+</html>
