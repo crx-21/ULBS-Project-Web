@@ -20,13 +20,13 @@ BA:
 - [ ] User-ul (cumparatorul) trebuie, in momentul cand se inregistreaza si vrea sa cumpere/inchirieze un apartament, sa aiba posibilitatea sa isi bage buletinul ca sa se poata sa se faca platile/facturile facute automat
 
 Developer
-- [ ] Interfata site (Pagina principala)
-- [ ] Implementarea paginilor externe (Cont, For-Rent/To-Rent, Contact)
+- [x] Interfata site (Pagina principala)
+- [x] Implementarea paginilor externe (Cont, For-Rent/To-Rent, Contact)
 - [x] Creearea bazei de date
 - [x] Functionalitatea contului
-- [ ] Functionalitatea site-ului
-- [ ] Legatura dintre back-end si front-end
-- [ ] Implementarea design-ului
+- [x] Functionalitatea site-ului
+- [x] Legatura dintre back-end si front-end
+- [x] Implementarea design-ului
 
 Designer:
 - [x] Paleta de culori pentru site
