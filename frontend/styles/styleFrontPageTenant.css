@@ -233,7 +233,64 @@ body {
     align-items: center;
 }
 
-/* Hover & Focus effects for the boxes */
+.properties-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 30px;
+    width: 100%;
+}
+
+
+.property-card {
+    background-color: #ffffff;
+    border: 5px solid #5c0a28;
+    border-radius: 35px;
+    height: 280px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+
+.card-image-wrapper {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+}
+
+.card-overlay-bar {
+    background-color: #ffffff;
+    width: 100%;
+    height: 65px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.card-city-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: #333333;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.card-price-tag {
+    background-color: #5c0a28;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px 14px;
+    border-radius: 50%;
+    min-width: 45px;
+    text-align: center;
+    display: inline-block;
+}
+
 #btnTenant:hover,
 #btnLandlord:hover {
     background-color: #7a1148;
@@ -248,3 +305,4 @@ body {
 #btnLandlord:active {
     transform: translateY(0);
 }
+
