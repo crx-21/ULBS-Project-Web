@@ -151,42 +151,4 @@ class Application {
         return $stmt->execute([$status, $applicationId]);
     }
 }
-
-
-class Review {
-    private $reviewId;
-    private $propertyId;
-    private $tenantId;
-    private $rating;
-    private $comment;
-    private $db;
-
-    public function __construct($conn) {
-        $this->db = $conn;
-    }
-
-    public function Create($propertyId, $tenantId, $rating, $comment) {
-        $stmt = $this->db->prepare(
-            "INSERT INTO reviews (propertyId, tenantId, rating, comment) VALUES (?, ?, ?, ?)"
-        );
-        return $stmt->execute([$propertyId, $tenantId, $rating, $comment]);
-    }
-
-    public function GetByProperty($propertyId) {
-        $stmt = $this->db->prepare("SELECT * FROM reviews WHERE propertyId = ?");
-        $stmt->execute([$propertyId]);
-        return $stmt->fetchAll();
-    }
-
-    public function GetByTenant($tenantId) {
-        $stmt = $this->db->prepare("SELECT * FROM reviews WHERE tenantId = ?");
-        $stmt->execute([$tenantId]);
-        return $stmt->fetchAll();
-    }
-
-    public function Delete($reviewId) {
-        $stmt = $this->db->prepare("DELETE FROM reviews WHERE reviewId = ?");
-        return $stmt->execute([$reviewId]);
-    }
-}
 ?>

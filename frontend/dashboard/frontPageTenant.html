@@ -13,7 +13,6 @@
             Rentifly
         </div>
         <div class="nav-links">
-            <input type="button" value="Browse" id="browse">
             <input type="button" value="Contact Us" id="contact">
             
     </div>
@@ -33,10 +32,6 @@
         
     </div>
     </div>
-    <div class="search-bar">
-        <input type="text" placeholder="City or neighborhood..." class="search-input">
-        <input type="button" value="Search" class="search-button">
-    </div>
 
     <div id="PopupRegister">
         <div class="popup-content">
@@ -52,14 +47,45 @@
     <script src="../scripts/auth.js"></script>
 
     <div class="properties-section">
-        <h2 class="section-title">Available Properties</h2>
-        <div id="properties-container" class="properties-container"></div>
-        <div id="no-properties-message">No available properties found.</div>
-        <div class="mega-deals-section">
-            <h2 class="section-title">Mega Deals</h2>
-            <div id="mega-properties-container" class="properties-container"></div>
-            <div id="no-mega-properties-message">No mega deals available at the moment.</div>
+        <div class="search-bar-container">
+            <input type="text" id="global-search" placeholder="Start looking your home?">
+            <span class="search-icon"></span>
         </div>
+        <div class="filter-and-cards-wrapper">
+            <div class="filters-sidebar">
+                <h2>Filters</h2>
+            
+                <div class="filter-group">
+                    <label>Location</label>
+                    <input type="text" id="filter-location" placeholder="City or neighborhood">
+                </div>
+                <div class="filter-group">
+                    <label>Price range</label>
+                    <div class="price-inputs-row">
+                        <input type="number" id="filter-min-rent" placeholder="Min ($)">
+                        <span class="price-separator">-</span>
+                        <input type="number" id="filter-max-rent" placeholder="Max ($)">
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Property type</label>
+                    <div class="custom-select-wrapper">
+                        <select id="filter-type">
+                            <option value="any">Any</option>
+                            <option value="apartment">Apartment</option>
+                            <option value="house">House</option>
+                        </select>
+                    </div>
+                </div>
+                <button id="btn-apply-filters" class="btn-apply-filters">Apply Filters</button>
+            </div>
+            <div class="cards-side-column">
+                <div id="properties-container" class="properties-container"></div>
+                <div id="no-properties-message">No available properties found.</div>
+            </div>
+        </div>
+        <div id="mega-properties-container" style="display:none;"></div>
+        <div id="no-mega-properties-message" style="display:none;"></div>
     </div>
 
     <!-- Property Popup -->
@@ -77,6 +103,31 @@
         </div>
     </div>
 </div>
+
+<div id="PopupContact" class="popup-overlay">
+    <div class="popup-content-box">
+        <button class="popup-close-btn" id="btnCloseContact">✕</button>
+        <h2>Contact Us</h2>
+        <p>Have questions or facing an issue? Drop us a message and our support team will review it.</p>
+        
+        <form id="contactForm">
+            <div class="form-input-group">
+                <input type="text" id="contact-name" placeholder="Your Name" required>
+            </div>
+            <div class="form-input-group">
+                <input type="email" id="contact-email" placeholder="Your Email Address" required>
+            </div>
+            <div class="form-input-group">
+                <input type="tel" id="contact-phone" placeholder="Your Phone Number" required>
+            </div>
+            <div class="form-input-group">
+                <textarea id="contact-message" placeholder="How can we help you?" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="btn-submit-contact" id="btnSubmitContact">Send Message</button>
+        </form>
+    </div>
+</div>
+
      <script src="../scripts/tenantViewProperties.js"></script>
         
 

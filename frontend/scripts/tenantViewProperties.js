@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
     await loadAvailableProperties();
+    await loadCounterStatistics();
+    contactRequest();
 
     document.getElementById('popup-overlay')?.addEventListener('click', (e) => {
         if (e.target === document.getElementById('popup-overlay')) closePopup();
@@ -8,11 +10,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function loadAvailableProperties() {
     const regularGrid        = document.getElementById('properties-container');
-    const regularEmptyMessage= document.getElementById('no-properties-message');
-    const megaGrid           = document.getElementById('mega-properties-container');
-    const megaEmptyMessage   = document.getElementById('no-mega-properties-message');
 
-    if (!regularGrid || !megaGrid) return;
+    if (!regularGrid) return;
 
     try {
         // Check if tenant already has an application
@@ -25,33 +24,90 @@ async function loadAvailableProperties() {
             return;
         }
 
-        const allProp          = response.properties;
-        const regularProperties= allProp.filter(p => p.rent < 100);
-        const megaProperties   = allProp.filter(p => p.rent >= 100);
-
-        if (regularProperties.length === 0) {
-            if (regularEmptyMessage) regularEmptyMessage.style.display = 'block';
-            regularGrid.style.display = 'none';
-        } else {
-            if (regularEmptyMessage) regularEmptyMessage.style.display = 'none';
-            regularGrid.style.display = 'grid';
-            regularGrid.innerHTML = '';
-            regularProperties.forEach(p => regularGrid.appendChild(createPropertyCard(p, hasApplied)));
-        }
-
-        if (megaProperties.length === 0) {
-            if (megaEmptyMessage) megaEmptyMessage.style.display = 'block';
-            megaGrid.style.display = 'none';
-        } else {
-            if (megaEmptyMessage) megaEmptyMessage.style.display = 'none';
-            megaGrid.style.display = 'grid';
-            megaGrid.innerHTML = '';
-            megaProperties.forEach(p => megaGrid.appendChild(createPropertyCard(p, hasApplied)));
-        }
+        window.loadedProperties = response.properties;
+        window.hasUserApplied = hasApplied;
+        renderProperties(window.loadedProperties, window.hasUserApplied);
+        document.getElementById('btn-apply-filters').onclick = applyUserFilters;
 
     } catch (error) {
         console.error('Error fetching available properties:', error);
     }
+}
+
+async function loadCounterStatistics() {
+    const propCounter = document.getElementById('properties-counter');
+    const cityCounter = document.getElementById('cities-counter');
+
+
+    if (!propCounter || !cityCounter) return;
+
+    try {
+        // Query your existing API wrapper infrastructure
+        const response = await apiPost({ action: 'GetCounts' });
+
+        if (response.success) {
+            // Write the actual database statistics results into the DOM elements
+            propCounter.textContent = response.properties ?? 0;
+            cityCounter.textContent = response.cities ?? 0;
+        } else {
+            console.warn('API returned success:false when retrieving counts.');
+        }
+    } catch (error) {
+        console.error('Failed to update dashboard hero metrics:', error);
+    }
+}
+
+function renderProperties(properties, hasApplied) {
+    const regularGrid = document.getElementById('properties-container');
+    const emptyMessage = document.getElementById('no-properties-message');
+    if (properties.length === 0) {
+        if (emptyMessage) emptyMessage.style.display = 'block';
+        regularGrid.style.display = 'none';
+    } else {
+        if (emptyMessage) emptyMessage.style.display = 'none';
+        regularGrid.style.display = 'grid';
+        regularGrid.innerHTML = '';
+        properties.forEach((property) => {
+            const card = createPropertyCard(property, hasApplied);
+            regularGrid.appendChild(card);
+        });
+    }
+}
+
+function applyUserFilters() {
+    const locactionFilter = document.getElementById('filter-location').value.trim().toLowerCase();
+    const minRentFilter  = parseFloat(document.getElementById('filter-min-rent').value);
+    const maxRentFilter  = parseFloat(document.getElementById('filter-max-rent').value);
+    const propertyTypeFilter = document.getElementById('filter-property-type').value;
+    const searchTerm = document.getElementById('global-search').value.trim().toLowerCase();
+
+    let filtered = window.loadedProperties || [];
+
+    if (locactionFilter) {
+        filtered = filtered.filter(p => p.location.toLowerCase().includes(locactionFilter));
+    }
+
+    if(searchTerm) {
+        filtered = filtered.filter(p => 
+            p.title.toLowerCase().includes(searchTerm) ||
+            p.description.toLowerCase().includes(searchTerm) ||
+            p.location.toLowerCase().includes(searchTerm)
+        );
+    }
+
+    if(propertyTypeFilter && propertyTypeFilter !== 'any') {
+        filtered = filtered.filter(p => p.property_type === propertyTypeFilter);
+    }
+
+    filtered = filtered.filter(p => {
+        const rent = parseFloat(p.rent);
+        if (!isNaN(minRentFilter) && rent < minRentFilter) return false;
+        if (!isNaN(maxRentFilter) && rent > maxRentFilter) return false;
+        return true;
+    });
+
+    renderProperties(filtered, window.hasUserApplied);
+
 }
 
 function createPropertyCard(property, hasApplied) {
@@ -106,9 +162,75 @@ function openPropertyPopup(property, hasApplied) {
     document.getElementById('popup-overlay').style.display = 'flex';
 }
 
+function contactRequest(){
+    const contactBtn = document.getElementById('contact');
+    const contactPopup = document.getElementById('PopupContact');
+    const closeContactBtn = document.getElementById('btnCloseContact');
+    const contactForm = document.getElementById('contactForm');
+
+    // Show popup
+    contactBtn?.addEventListener('click', () => {
+        if (contactPopup) contactPopup.style.display = 'flex';
+    });
+
+    // Hide popup on click '✕'
+    closeContactBtn?.addEventListener('click', closeContactPopup);
+
+    // Hide popup when clicking outside the panel content
+    contactPopup?.addEventListener('click', (e) => {
+        if (e.target === contactPopup) closeContactPopup();
+    });
+
+    // Handle form submit via AJAX Fetch
+    contactForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const submitBtn = document.getElementById('btnSubmitContact');
+        if (submitBtn) {
+            submitBtn.textContent = 'Sending Message...';
+            submitBtn.disabled = true;
+        }
+
+        const dataPayload = {
+            action: 'submit_support_ticket',
+            name: document.getElementById('contact-name').value.trim(),
+            email: document.getElementById('contact-email').value.trim(),
+            phone: document.getElementById('contact-phone').value.trim(),
+            message: document.getElementById('contact-message').value.trim()
+        };
+
+        try {
+            const response = await apiPost(dataPayload); // Uses your project's existing apiPost helper
+            if (response.success) {
+                alert('Your inquiry was sent successfully!');
+                contactForm.reset();
+                closeContactPopup();
+            } else {
+                alert(response.message || 'An error occurred.');
+            }
+        } catch (error) {
+            console.error('API Error:', error);
+            alert('Could not connect to the server.');
+        } finally {
+            if (submitBtn) {
+                submitBtn.textContent = 'Send Message';
+                submitBtn.disabled = false;
+            }
+        }
+    });
+}
+
 function closePopup() {
     document.getElementById('popup-overlay').style.display = 'none';
 }
+
+function closeContactPopup() {
+    const contactPopup = document.getElementById('PopupContact');
+    if (contactPopup) {
+        contactPopup.style.display = 'none';
+    }
+}
+
+
 
 function escapeHtml(text) {
     const div = document.createElement('div');
